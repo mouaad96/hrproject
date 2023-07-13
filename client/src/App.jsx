@@ -5,7 +5,7 @@ import Departement from "./pages/Departement";
 import Authentication from "./pages/Authentication";
 import Employeur from "./pages/Employeur";
 import Settings from "./pages/Settings";
-import Stroage from "./pages/Stroage";
+import Feries from "./pages/Feries";
 import Bureau from "./pages/Bureau";
 
 const App = () => {
@@ -14,7 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<AllApps />} />
         <Route path="/authentication" element={<Authentication />} />
-        <Route path="/stroage" element={<Stroage />} />
+        <Route path="/Feries" element={<Feries />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/Employeurs/:bID" element={<Employeur />} />
         <Route path="/Départements/:aID" element={<Departement />} />

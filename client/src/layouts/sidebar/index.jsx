@@ -15,7 +15,7 @@ import {
 import { BsFillBuildingsFill } from "react-icons/bs";
 
 import { useMediaQuery } from "react-responsive";
-import { MdMenu, MdPeople, MdEventAvailable } from "react-icons/md";
+import { MdMenu, MdPeople, MdEventAvailable, MdLogout } from "react-icons/md";
 
 import { NavLink, useLocation, useRoutes } from "react-router-dom";
 
@@ -74,17 +74,24 @@ const Sidebar = () => {
     {
       name: "Employeurs",
       icon: MdPeople,
-      menus: ["Liste", "Présence"],
+      menus: [
+        "Liste Des Employeurs",
+        "Présence",
+        "Congés",
+        "Paiements",
+        "Promotions",
+        "Désignation",
+      ],
     },
     {
       name: "Départements",
       icon: BsFillBuildingsFill,
-      menus: ["Liste", "Sous Département", "Bureau"],
+      menus: ["Liste", "Sous Département"],
     },
     {
       name: "Bureaux",
       icon: AiOutlineDesktop,
-      menus: ["Liste Des Bureaux", "usage"],
+      menus: ["Liste Des Bureaux", "Affectations"],
     },
   ];
 
@@ -122,23 +129,11 @@ const Sidebar = () => {
                 Accueil
               </NavLink>
             </li>
-            <li>
-              <NavLink to={"/authentication"} className="link">
-                <AiFillMessage size={23} className="min-w-max" />
-                Messages
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to={"/stroage"} className="link">
-                <MdEventAvailable size={23} className="min-w-max" />
-                Liste des jours fériés
-              </NavLink>
-            </li>
 
             {(open || isTabletMid) && (
               <div className="border-y py-5 border-slate-300 ">
                 <small className="pl-3 text-slate-500 inline-block mb-2">
-                  Gestion de la commune
+                  Ressources
                 </small>
                 {subMenusList?.map((menu) => (
                   <div key={menu.name} className="flex flex-col gap-1">
@@ -148,9 +143,27 @@ const Sidebar = () => {
               </div>
             )}
             <li>
+              <NavLink to={"/authentication"} className="link">
+                <AiFillMessage size={23} className="min-w-max" />
+                Messages
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={"/Feries"} className="link">
+                <MdEventAvailable size={23} className="min-w-max" />
+                Jours Fériés
+              </NavLink>
+            </li>
+            <li className="border-t pt-5 border-slate-300 ">
               <NavLink to={"/settings"} className="link">
                 <AiOutlineUser size={23} className="min-w-max" />
-                Profile
+                Compte
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={"/decon"} className="link">
+                <MdLogout size={23} className="min-w-max" />
+                Déconnexion
               </NavLink>
             </li>
           </ul>
