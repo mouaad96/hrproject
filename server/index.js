@@ -8,13 +8,22 @@ import { verifierConnexion } from "./middleware/authMiddleware.js";
 const app = express();
 
 //middleware
-
+/*
+app.use((req, res, next) => {
+  res.header("Access Control-Allow-Credentials", true);
+  next();
+});
+*/
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 app.use(cookieParser());
 
 //route
-app.use("/api/emp", verifierConnexion, employeurRoute);
+app.use("/api/emp", employeurRoute);
 app.use("/api/auth", authRoute);
 
 app.listen(5000, () => {

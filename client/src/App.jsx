@@ -7,20 +7,78 @@ import Employeur from "./pages/Employeur";
 import Settings from "./pages/Settings";
 import Feries from "./pages/Feries";
 import Bureau from "./pages/Bureau";
+import Presence from "./pages/Presence";
+import Login from "./pages/login";
 
 const App = () => {
   return (
-    <RootLayout>
-      <Routes>
-        <Route path="/" element={<AllApps />} />
-        <Route path="/authentication" element={<Authentication />} />
-        <Route path="/Feries" element={<Feries />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/Employeurs/:bID" element={<Employeur />} />
-        <Route path="/Départements/:aID" element={<Departement />} />
-        <Route path="/Bureaux/:brID" element={<Bureau />} />
-      </Routes>
-    </RootLayout>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <RootLayout>
+            <AllApps />
+          </RootLayout>
+        }
+      />
+      <Route path="/Login" element={<Login />} />
+      <Route
+        path="/authentication"
+        element={
+          <RootLayout>
+            <Authentication />
+          </RootLayout>
+        }
+      />
+      <Route
+        path="/Feries"
+        element={
+          <RootLayout>
+            <Feries />
+          </RootLayout>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <RootLayout>
+            <Settings />
+          </RootLayout>
+        }
+      />
+      <Route
+        path="/Employeurs/:bID"
+        element={
+          <RootLayout>
+            <Employeur />
+          </RootLayout>
+        }
+      />
+      <Route
+        path="/Employeurs/Présence"
+        element={
+          <RootLayout>
+            <Presence />
+          </RootLayout>
+        }
+      />
+      <Route
+        path="/Départements/:aID"
+        element={
+          <RootLayout>
+            <Departement />
+          </RootLayout>
+        }
+      />
+      <Route
+        path="/Bureaux/:brID"
+        element={
+          <RootLayout>
+            <Bureau />
+          </RootLayout>
+        }
+      />
+    </Routes>
   );
 };
 

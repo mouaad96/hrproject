@@ -2,22 +2,18 @@ import { db } from "../db/connect.js";
 import bcryptjs from "bcryptjs";
 
 export const addEmp = (req, res) => {
-  // check if logged in
-  const token = req.cookies.accessToken;
-  console.log(token);
   //check if emp exists
   const q = "SELECT * FROM employeur WHERE nomCpt = ?";
   db.query(q, [req.body.nomCpt], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("employeur existe deja");
-    //create new emp
-    // hash password
 
+    // hash password
     const salt = bcryptjs.genSaltSync(10);
     const hashedPass = bcryptjs.hashSync(req.body.mdp, salt);
-
+    //create new emp
     const q =
-      "INSERT INTO employeur (`immatricule`,`nomCpt`, `mdp`, `prenom`, `nom`, `dateN`, `sexe`, `adresse`, `tel`, `email`,`isAdmin`, `idBureau`,`idDes`, `idGrade`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+      "INSERT INTO employeur (`immatricule`,`nomCpt`, `mdp`, `prenom`, `nom`, `dateN`, `sexe`, `adresse`, `tel`, `email`,`isAdmin`, `idBureau`,`idDes`,`echelle`, `echelant`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     const values = [
       req.body.immatricule,
       req.body.nomCpt,
@@ -32,7 +28,8 @@ export const addEmp = (req, res) => {
       req.body.isAdmin,
       req.body.idBureau,
       req.body.idDes,
-      req.body.idGrade,
+      req.body.echelle,
+      req.body.echelant,
     ];
 
     db.query(
@@ -41,7 +38,7 @@ export const addEmp = (req, res) => {
       (err,
       (data) => {
         if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
+        return res.status(200).json("employeur ajouter");
       })
     );
   });
@@ -86,7 +83,8 @@ export const updateEmp = (req, res) => {
     isAdmin,
     idBureau,
     idDes,
-    idGrade,
+    echelle,
+    echelant,
   } = req.body;
   const q = `
   UPDATE employeur
@@ -101,7 +99,8 @@ export const updateEmp = (req, res) => {
     isAdmin = ?,
     idBureau = ?,
     idDes = ?,
-    idGrade = ?
+    echelle = ?,
+    echelant = ?
   WHERE immatricule = ?
 `;
   const values = [
@@ -115,7 +114,8 @@ export const updateEmp = (req, res) => {
     isAdmin ? 1 : 0,
     idBureau,
     idDes,
-    idGrade,
+    echelle,
+    echelant,
     immatricule,
   ];
 

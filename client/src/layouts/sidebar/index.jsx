@@ -161,7 +161,7 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/decon"} className="link">
+              <NavLink to={"/Login"} className="link">
                 <MdLogout size={23} className="min-w-max" />
                 Déconnexion
               </NavLink>
