@@ -14,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AjouterEmp from "./pages/employeur/AjouterEmp";
 import EmployeurDes from "./pages/employeur/EmployeurDes";
+import UpdateEmp from "./pages/employeur/UpdateEmp";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -54,14 +55,16 @@ const App = () => {
             </RootLayout>
           }
         />
+
         <Route
-          path="/Employeurs/:bID"
+          path="/Employeurs/:menu"
           element={
             <RootLayout>
               <Employeur />
             </RootLayout>
           }
         />
+
         <Route
           path="/Employeurs/Présence"
           element={
@@ -97,6 +100,7 @@ const App = () => {
         />
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
+        <Route path="UpdateEmp/:empId" element={<UpdateEmp />} />
       </Routes>
     </QueryClientProvider>
   );

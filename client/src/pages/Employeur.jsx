@@ -71,12 +71,12 @@ const Employeur = () => {
                 <td className="px-6 py-4">{employee.nom}</td>
                 <td className="px-6 py-4">{employee.tel}</td>
                 <td className="px-6 py-4 flex gap-2">
-                  <a
-                    href={`#/:${employee.immatricule}`}
+                  <NavLink
+                    to={`/UpdateEmp/${employee.immatricule}`}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     Edit
-                  </a>
+                  </NavLink>
                   <button
                     onClick={() => handleDelete(employee.immatricule)}
                     className="font-medium text-red-600 dark:text-red-500 hover:underline"
