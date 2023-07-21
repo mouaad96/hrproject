@@ -17,13 +17,25 @@ import { BsFillBuildingsFill } from "react-icons/bs";
 import { useMediaQuery } from "react-responsive";
 import { MdMenu, MdPeople, MdEventAvailable, MdLogout } from "react-icons/md";
 
-import { NavLink, useLocation, useRoutes } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
   const [open, setOpen] = useState(isTabletMid ? false : true);
   const sidebarRef = useRef();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:5000/api/auth/logout", { withCredentials: true })
+      .then((resp) => toast.info(resp.data));
+    localStorage.clear();
+    navigate("/login");
+  };
 
   useEffect(() => {
     if (isTabletMid) {
@@ -161,10 +173,10 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/Login"} className="link">
+              <button type="button" onClick={handleLogout} className="link">
                 <MdLogout size={23} className="min-w-max" />
                 Déconnexion
-              </NavLink>
+              </button>
             </li>
           </ul>
         </div>
@@ -194,6 +206,7 @@ const Sidebar = () => {
       <div className="m-3 md:hidden  " onClick={() => setOpen(true)}>
         <MdMenu size={25} />
       </div>
+      <ToastContainer />
     </div>
   );
 };

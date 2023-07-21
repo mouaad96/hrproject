@@ -24,11 +24,13 @@ export const login = (req, res) => {
 };
 
 export const logout = (req, res) => {
+  //res.clearCookie("accessToken").status(200).json("deconnexion!");
+  req.session = null;
   res
     .clearCookie("accessToken", {
       secure: true,
-      sameSite: "none", // we will be able to clear the cookie even if its not the same site
+      sameSite: "none",
     })
     .status(200)
-    .json("deconnexion!");
+    .json("deco");
 };

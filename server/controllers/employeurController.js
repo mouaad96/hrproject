@@ -45,7 +45,7 @@ export const addEmp = (req, res) => {
 };
 
 export const getEmp = (req, res) => {
-  const q = "SELECT * FROM employeur";
+  const q = "SELECT * FROM employeur WHERE isAdmin =0";
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data);

@@ -8,77 +8,97 @@ import Settings from "./pages/Settings";
 import Feries from "./pages/Feries";
 import Bureau from "./pages/Bureau";
 import Presence from "./pages/Presence";
-import Login from "./pages/login";
+import Auth from "./pages/Auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AjouterEmp from "./pages/employeur/AjouterEmp";
+import EmployeurDes from "./pages/employeur/EmployeurDes";
 
 const App = () => {
+  const queryClient = new QueryClient();
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <RootLayout>
-            <AllApps />
-          </RootLayout>
-        }
-      />
-      <Route path="/Login" element={<Login />} />
-      <Route
-        path="/authentication"
-        element={
-          <RootLayout>
-            <Authentication />
-          </RootLayout>
-        }
-      />
-      <Route
-        path="/Feries"
-        element={
-          <RootLayout>
-            <Feries />
-          </RootLayout>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <RootLayout>
-            <Settings />
-          </RootLayout>
-        }
-      />
-      <Route
-        path="/Employeurs/:bID"
-        element={
-          <RootLayout>
-            <Employeur />
-          </RootLayout>
-        }
-      />
-      <Route
-        path="/Employeurs/Présence"
-        element={
-          <RootLayout>
-            <Presence />
-          </RootLayout>
-        }
-      />
-      <Route
-        path="/Départements/:aID"
-        element={
-          <RootLayout>
-            <Departement />
-          </RootLayout>
-        }
-      />
-      <Route
-        path="/Bureaux/:brID"
-        element={
-          <RootLayout>
-            <Bureau />
-          </RootLayout>
-        }
-      />
-    </Routes>
+    <QueryClientProvider client={queryClient}>
+      <ToastContainer />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <RootLayout>
+              <AllApps />
+            </RootLayout>
+          }
+        />
+
+        <Route
+          path="/authentication"
+          element={
+            <RootLayout>
+              <Authentication />
+            </RootLayout>
+          }
+        />
+        <Route
+          path="/Feries"
+          element={
+            <RootLayout>
+              <Feries />
+            </RootLayout>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <RootLayout>
+              <Settings />
+            </RootLayout>
+          }
+        />
+        <Route
+          path="/Employeurs/:bID"
+          element={
+            <RootLayout>
+              <Employeur />
+            </RootLayout>
+          }
+        />
+        <Route
+          path="/Employeurs/Présence"
+          element={
+            <RootLayout>
+              <Presence />
+            </RootLayout>
+          }
+        />
+        <Route
+          path="/Employeurs/Désignation"
+          element={
+            <RootLayout>
+              <EmployeurDes />
+            </RootLayout>
+          }
+        />
+
+        <Route
+          path="/Départements/:aID"
+          element={
+            <RootLayout>
+              <Departement />
+            </RootLayout>
+          }
+        />
+        <Route
+          path="/Bureaux/:brID"
+          element={
+            <RootLayout>
+              <Bureau />
+            </RootLayout>
+          }
+        />
+        <Route path="/Login" element={<Auth />} />
+        <Route path="/AjouterEmp" element={<AjouterEmp />} />
+      </Routes>
+    </QueryClientProvider>
   );
 };
 
