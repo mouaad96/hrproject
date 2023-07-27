@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { useRef } from "react";
 import SubMenu from "./SubMenu";
 import { motion } from "framer-motion";
-
-// * React icons
-import { IoIosArrowBack } from "react-icons/io";
-
 import {
   AiFillHome,
   AiFillMessage,
@@ -15,13 +11,12 @@ import {
 import { BsFillBuildingsFill } from "react-icons/bs";
 
 import { useMediaQuery } from "react-responsive";
-import { MdMenu, MdPeople, MdEventAvailable, MdLogout } from "react-icons/md";
+import { MdMenu, MdPeople, MdLogout, MdOutlineTaskAlt } from "react-icons/md";
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
@@ -88,11 +83,12 @@ const Sidebar = () => {
       icon: MdPeople,
       menus: [
         "Liste Des Employeurs",
+        "Désignation",
+        "Bureau Occupé",
         "Présence",
         "Congés",
         "Paiements",
         "Promotions",
-        "Désignation",
       ],
     },
     {
@@ -103,7 +99,12 @@ const Sidebar = () => {
     {
       name: "Bureaux",
       icon: AiOutlineDesktop,
-      menus: ["Liste Des Bureaux", "Affectations"],
+      menus: ["Liste Des Bureaux"],
+    },
+    {
+      name: "Désignations",
+      icon: MdOutlineTaskAlt,
+      menus: ["Liste Des Désignations"],
     },
   ];
 
@@ -160,12 +161,7 @@ const Sidebar = () => {
                 Messages
               </NavLink>
             </li>
-            <li>
-              <NavLink to={"/Feries"} className="link">
-                <MdEventAvailable size={23} className="min-w-max" />
-                Jours Fériés
-              </NavLink>
-            </li>
+
             <li className="border-t pt-5 border-slate-300 ">
               <NavLink to={"/settings"} className="link">
                 <AiOutlineUser size={23} className="min-w-max" />
@@ -180,33 +176,10 @@ const Sidebar = () => {
             </li>
           </ul>
         </div>
-        <motion.div
-          onClick={() => {
-            setOpen(!open);
-          }}
-          animate={
-            open
-              ? {
-                  x: 0,
-                  y: 0,
-                  rotate: 0,
-                }
-              : {
-                  x: -10,
-                  y: -20,
-                  rotate: 180,
-                }
-          }
-          transition={{ duration: 0 }}
-          className="absolute w-fit h-fit md:block z-50 hidden right-2 bottom-3 cursor-pointer"
-        >
-          <IoIosArrowBack size={25} />
-        </motion.div>
       </motion.div>
       <div className="m-3 md:hidden  " onClick={() => setOpen(true)}>
         <MdMenu size={25} />
       </div>
-      <ToastContainer />
     </div>
   );
 };

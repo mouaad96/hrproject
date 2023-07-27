@@ -5,8 +5,11 @@ import bureauRoute from "./routes/bureauRoute.js";
 import desRoute from "./routes/desRoute.js";
 import echelleRoute from "./routes/echelleRoute.js";
 import echelantRoute from "./routes/echelantRoute.js";
+import departementRoute from "./routes/departementRoute.js";
+import sousDepRouter from "./routes/sousDepRouter.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import bodyParser from "body-parser";
 import { verifierConnexion } from "./middleware/authMiddleware.js";
 
 const app = express();
@@ -18,13 +21,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
 app.use(
   cors({
     origin: true,
     credentials: true,
   })
 );
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
 app.use(cookieParser());
 
@@ -35,6 +40,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/des", desRoute);
 app.use("/api/echelle", echelleRoute);
 app.use("/api/echelant", echelantRoute);
+app.use("/api/dep", departementRoute);
+app.use("/api/subDep", sousDepRouter);
 
 app.listen(5000, () => {
   console.log("API working");

@@ -12,8 +12,28 @@ export const addEmp = (req, res) => {
     const salt = bcryptjs.genSaltSync(10);
     const hashedPass = bcryptjs.hashSync(req.body.mdp, salt);
     //create new emp
-    const q =
-      "INSERT INTO employeur (`immatricule`,`nomCpt`, `mdp`, `prenom`, `nom`, `dateN`, `sexe`, `adresse`, `tel`, `email`,`isAdmin`, `idBureau`,`idDes`,`echelle`, `echelant`) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    const q = `INSERT INTO employeur 
+    (
+      immatricule,
+        nomCpt, 
+        mdp,
+        prenom,
+        nom,
+        dateN,
+        sexe, 
+        adresse, 
+        tel, 
+        email,
+        isAdmin,
+        idBureau,
+        idDes,
+        echelle, 
+        echelant,
+        image,
+        etatFam
+        ) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`;
     const values = [
       req.body.immatricule,
       req.body.nomCpt,
@@ -30,6 +50,8 @@ export const addEmp = (req, res) => {
       req.body.idDes,
       req.body.echelle,
       req.body.echelant,
+      req.body.image,
+      req.body.etatFam,
     ];
 
     db.query(
@@ -80,11 +102,12 @@ export const updateEmp = (req, res) => {
     adresse,
     tel,
     email,
-    isAdmin,
     idBureau,
     idDes,
     echelle,
     echelant,
+    image,
+    etatFam,
   } = req.body;
   const q = `
   UPDATE employeur
@@ -96,11 +119,12 @@ export const updateEmp = (req, res) => {
     adresse = ?,
     tel = ?,
     email = ?,
-    isAdmin = ?,
     idBureau = ?,
     idDes = ?,
     echelle = ?,
-    echelant = ?
+    echelant = ?,
+    image = ?,
+    etatFam = ?
   WHERE immatricule = ?
 `;
   const values = [
@@ -111,11 +135,12 @@ export const updateEmp = (req, res) => {
     adresse,
     tel,
     email,
-    isAdmin ? 1 : 0,
     idBureau,
     idDes,
     echelle,
     echelant,
+    image,
+    etatFam,
     immatricule,
   ];
 
@@ -162,7 +187,7 @@ export const getEmpDesignation = (req, res) => {
 
 export const getEmpBureau = (req, res) => {
   const q = `
-  SELECT e.immatricule, e.prenom, e.nom, b.intitule, b.etagere, b.idSd
+  SELECT b.idBureau, e.immatricule, e.prenom, e.nom, b.intitule
   FROM employeur e
   JOIN bureau b ON e.idBureau = b.idBureau
 `;

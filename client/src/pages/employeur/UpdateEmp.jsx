@@ -3,13 +3,13 @@ import myimg from "../../assets/avatar.jpg";
 import DropDown from "../../components/DropDown";
 import Input from "../../components/Input";
 import { NavLink, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
+import { toast } from "react-toastify";
+import FileBase64 from "react-file-base64";
 
 const UpdateEmp = () => {
   const { empId } = useParams();
-
-  const handleSubmit = () => {};
 
   const getBureaux = useQuery({
     queryKey: ["bur"],
@@ -50,15 +50,17 @@ const UpdateEmp = () => {
     adresse: "",
     tel: "",
     email: "",
-
     idBureau: "",
     idDes: "",
     echelle: "",
     echelant: "",
+    image: "",
+    etatFam: "",
   });
 
   const getEmployee = useQuery(["singleEmp", empId], async () => {
     const response = await makeRequest.get(`/emp/employeur/${empId}`);
+    //destruct data object
     const {
       immatricule,
       prenom,
@@ -72,17 +74,17 @@ const UpdateEmp = () => {
       idDes,
       echelle,
       echelant,
+      image,
+      etatFam,
     } = response.data;
-    const formattedDateN = dateN
-      ? new Date(dateN).toISOString().slice(0, 10)
-      : "";
+
     // Set the state with the updated values using the previous state
     setInputs((prevInputs) => ({
       ...prevInputs,
       immatricule,
       prenom,
       nom,
-      dateN: formattedDateN,
+      dateN: new Date(dateN).toISOString().slice(0, 10),
       sexe,
       adresse,
       tel,
@@ -91,24 +93,48 @@ const UpdateEmp = () => {
       idDes,
       echelle,
       echelant,
+      image,
+      etatFam,
     }));
     return response.data; // Return the data to react-query
   });
-
-  const handleChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  console.log(inputs);
 
   const bureaux = getBureaux.data;
   const designations = getDesignations.data;
   const echelles = getEchelles.data;
   const echelants = getEchelants.data;
-  const selectedEmp = getEmployee.data;
-  //const dateNai = moment(selectedEmp?.dateN).format("YYYY-MM-DD");
 
-  //const parsedDate = parseISO(selectedEmp?.dateN);
+  const updateEmployee = async (employee) => {
+    try {
+      await makeRequest.put(`/emp/update/${empId}`, employee);
+    } catch (err) {
+      throw err;
+    }
+  };
+  const etatFamilial = ["Célibataire", "Marrier", "Divorcer"];
+  const updateMutation = useMutation(updateEmployee);
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleProfilePictureChange = (file) => {
+    setInputs((prev) => ({ ...prev, image: file.base64 }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateMutation
+      .mutateAsync(inputs) // Use mutateAsync to await the Promise returned by addEmployee
+      .then(() => {
+        // This block will run if the API call is successful
+        toast.info("Employeur Mis A Jour!");
+      })
+      .catch((error) => {
+        // This block will run if the API call encounters an error
+        toast.error(error.response.data);
+      });
+  };
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 flex flex-col align-middle p-5 gap-2">
@@ -129,23 +155,20 @@ const UpdateEmp = () => {
               <div className="flex  justify-center">
                 <img
                   className="w-36 h-36   rounded-full  object-fill "
-                  src={myimg}
+                  src={inputs.image ? inputs.image : myimg}
                   alt="human"
                 />
               </div>
               <div>
-                <label
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  htmlFor="file_input"
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Upload file
                 </label>
-                <input
-                  className="block w-full file:py-3  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                  aria-describedby="file_input_help"
-                  id="file_input"
-                  type="file"
-                />
+                <div className="block w-full file:py-3  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                  <FileBase64
+                    multiple={false}
+                    onDone={handleProfilePictureChange}
+                  />
+                </div>
                 <p
                   className="mt-1 text-sm text-gray-500 dark:text-gray-300"
                   id="file_input_help"
@@ -187,6 +210,29 @@ const UpdateEmp = () => {
                   handleChange={handleChange}
                 />
               </div>
+            </div>
+            <div className="mb-6">
+              <label
+                htmlFor="etatFam"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Situation Familial
+              </label>
+              <select
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                name="etatFam"
+                id="etatFam"
+                value={inputs.etatFam}
+              >
+                {etatFamilial.map((etat, index) => {
+                  return (
+                    <option key={index} value={etat}>
+                      {etat}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
             <div className="mb-6">
               <Input

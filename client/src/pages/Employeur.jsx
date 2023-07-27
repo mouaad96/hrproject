@@ -45,6 +45,7 @@ const Employeur = () => {
             <th scope="col" className="px-6 py-3">
               immatricule
             </th>
+
             <th scope="col" className="px-6 py-3">
               prenom
             </th>
@@ -67,6 +68,7 @@ const Employeur = () => {
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
                 <td className="px-6 py-4">{employee.immatricule}</td>
+
                 <td className="px-6 py-4">{employee.prenom}</td>
                 <td className="px-6 py-4">{employee.nom}</td>
                 <td className="px-6 py-4">{employee.tel}</td>

@@ -6,16 +6,9 @@ import { toast } from "react-toastify";
 import myimg from "../../assets/avatar.jpg";
 import DropDown from "../../components/DropDown";
 import Input from "../../components/Input";
+import FileBase64 from "react-file-base64";
 
 const AjouterEmp = () => {
-  const addEmployee = async (employee) => {
-    try {
-      await makeRequest.post(`/emp/create`, employee);
-    } catch (err) {
-      throw err;
-    }
-  };
-
   const getBureaux = useQuery({
     queryKey: ["bur"],
     queryFn: async () =>
@@ -53,8 +46,6 @@ const AjouterEmp = () => {
   const echelles = getEchelles.data;
   const echelants = getEchelants.data;
 
-  const addMutation = useMutation(addEmployee);
-
   const [inputs, setInputs] = useState({
     immatricule: "",
     nomCpt: "",
@@ -62,7 +53,7 @@ const AjouterEmp = () => {
     prenom: "",
     nom: "",
     dateN: "",
-    sexe: "",
+    sexe: "Homme",
     adresse: "",
     tel: "",
     email: "",
@@ -71,20 +62,42 @@ const AjouterEmp = () => {
     idDes: "",
     echelle: "",
     echelant: "",
+    image: "",
+    etatFam: "Célibataire",
   });
+
+  const addEmployee = async (employee) => {
+    try {
+      await makeRequest.post(`/emp/create`, employee);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const etatFamilial = ["Célibataire", "Marrier", "Divorcer"];
+
+  const addMutation = useMutation(addEmployee);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const handleProfilePictureChange = (file) => {
+    setInputs((prev) => ({ ...prev, image: file.base64 }));
+    setPreviewImage(file.base64);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(inputs);
 
-    // console.log(inputs);
     addMutation
       .mutateAsync(inputs) // Use mutateAsync to await the Promise returned by addEmployee
       .then(() => {
         // This block will run if the API call is successful
+
         toast.info("Employeur Ajouter!");
       })
       .catch((error) => {
@@ -112,23 +125,21 @@ const AjouterEmp = () => {
               <div className="flex  justify-center">
                 <img
                   className="w-36 h-36   rounded-full  object-fill "
-                  src={myimg}
+                  src={previewImage ? previewImage : myimg}
                   alt="human"
                 />
               </div>
               <div>
-                <label
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  htmlFor="file_input"
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Upload file
                 </label>
-                <input
-                  className="block w-full file:py-3  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                  aria-describedby="file_input_help"
-                  id="file_input"
-                  type="file"
-                />
+                <div className="block w-full file:py-3  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                  <FileBase64
+                    multiple={false}
+                    onDone={handleProfilePictureChange}
+                  />
+                </div>
+
                 <p
                   className="mt-1 text-sm text-gray-500 dark:text-gray-300"
                   id="file_input_help"
@@ -168,6 +179,28 @@ const AjouterEmp = () => {
               </div>
             </div>
             <div className="mb-6">
+              <label
+                htmlFor="etatFam"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Situation Familial
+              </label>
+              <select
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                name="etatFam"
+                id="etatFam"
+              >
+                {etatFamilial.map((etat, index) => {
+                  return (
+                    <option key={index} value={etat}>
+                      {etat}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="mb-6">
               <Input
                 type="date"
                 id="dateN"
@@ -176,7 +209,7 @@ const AjouterEmp = () => {
                 handleChange={handleChange}
               />
             </div>
-            <div className="mb-6" onChange={handleChange}>
+            <div className="mb-6">
               <p className="text-white p-1">Sexe</p>
               <div className="flex items-center mb-4">
                 <input
@@ -184,6 +217,8 @@ const AjouterEmp = () => {
                   type="radio"
                   value="Homme"
                   name="sexe"
+                  defaultChecked
+                  onChange={handleChange}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
@@ -199,6 +234,7 @@ const AjouterEmp = () => {
                   type="radio"
                   value="Femme"
                   name="sexe"
+                  onChange={handleChange}
                   className="w-4 h-4  bg-gray-100 border-gray-300 focus:ring-0  dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
