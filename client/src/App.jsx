@@ -22,6 +22,11 @@ import AjouterSousDep from "./pages/sousDep/AjouterSousDep";
 import UpdateSousDep from "./pages/sousDep/UpdateSousDep";
 import AjouterBur from "./pages/bureau/AjouterBur";
 import Affectation from "./pages/employeur/Affectation";
+import UpdateBur from "./pages/bureau/UpdateBur";
+import Designation from "./pages/designation/Designation";
+import AjouterDes from "./pages/designation/AjouterDes";
+import UpdateDes from "./pages/designation/UpdateDes";
+import EmployeurGrade from "./pages/employeur/EmployeurGrade";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -124,13 +129,34 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/Désignations/Liste Des Désignations"
+          element={
+            <RootLayout>
+              <Designation />
+            </RootLayout>
+          }
+        />
+
+        <Route
+          path="/Employeurs/Grade"
+          element={
+            <RootLayout>
+              <EmployeurGrade />
+            </RootLayout>
+          }
+        />
+
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
         <Route path="/AjouterDep" element={<AjouterDep />} />
         <Route path="/AjouterBur" element={<AjouterBur />} />
+        <Route path="/AjouterDes" element={<AjouterDes />} />
         <Route path="/AjouterSubDep" element={<AjouterSousDep />} />
         <Route path="/UpdateEmp/:empId" element={<UpdateEmp />} />
         <Route path="/UpdateDep/:depId" element={<UpdateDep />} />
+        <Route path="/UpdateDes/:desId" element={<UpdateDes />} />
+        <Route path="/UpdateBur/:idBur" element={<UpdateBur />} />
         <Route path="/UpdateSubDep/:sdId" element={<UpdateSousDep />} />
       </Routes>
     </QueryClientProvider>

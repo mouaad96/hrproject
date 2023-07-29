@@ -200,3 +200,20 @@ export const getEmpBureau = (req, res) => {
     }
   });
 };
+
+export const getEmpGrade = (req, res) => {
+  const q = `SELECT emp.immatricule, emp.prenom, emp.nom, e.echelle, ec.echelant 
+            FROM employeur emp
+            JOIN echelle e
+            ON emp.echelle = e.echelle
+            JOIN echelant ec
+            ON emp.echelant = ec.echelant`;
+
+  db.query(q, (err, results) => {
+    if (err) {
+      res.status(500).send("Erreur grade emp");
+    } else {
+      res.send(results);
+    }
+  });
+};

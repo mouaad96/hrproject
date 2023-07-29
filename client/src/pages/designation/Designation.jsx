@@ -4,68 +4,59 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
-const Bureau = () => {
+const Designation = () => {
   const queryClient = useQueryClient();
 
-  async function deleteBureau(burId) {
+  const deleteDesignation = async (desId) => {
+    //api call
     try {
-      await makeRequest.delete(`/bur/delete/${burId}`);
+      await makeRequest.delete(`/des/delete/${desId}`);
     } catch (error) {
-      // Handle any errors that might occur during the API call.
-      throw error; // Rethrow the error to trigger the `onError` callback in the `useMutation` hook.
+      throw error;
     }
-  }
+  };
 
+  // api get call
   const { isLoading, error, data } = useQuery({
-    queryKey: ["bureau"],
+    queryKey: ["des"],
     queryFn: () =>
-      makeRequest.get(`/bur/list`).then((res) => {
+      makeRequest.get(`/des/list`).then((res) => {
         return res.data;
       }),
     onError: () => {
       <Navigate to="/login" replace />;
     },
   });
-  queryClient.invalidateQueries({ queryKey: ["bureau"] });
+  queryClient.invalidateQueries({ queryKey: ["des"] });
 
-  const deleteMutation = useMutation(deleteBureau, {
+  const designationMutation = useMutation(deleteDesignation, {
     onSuccess: () => {
-      toast.info("Bureau supprimé!");
+      toast.info("Département supprimé!");
     },
     onError: (error) => {
-      if (error?.response?.status === 409) {
-        toast.error(
-          "Impossible de supprimer le bureau car un employé l'occupe."
-        );
-      } else {
-        toast.error(
-          "Une erreur est survenue lors de la suppression du bureau."
-        );
-      }
+      toast.error(error.response.data);
     },
   });
-
-  const handleDelete = (burId) => {
-    deleteMutation.mutate(burId);
+  const handleDelete = (depId) => {
+    designationMutation.mutate(depId);
   };
 
   const [filterText, setFilterText] = useState(""); // State variable for filtering
 
   // Filtering logic based on filterText
-  const filteredData = data?.filter((bur) => bur.intitule.includes(filterText));
-
+  const filteredData = data?.filter((des) => des.nomDes.includes(filterText));
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
       <NavLink
-        to={"/AjouterBur"}
+        to={"/AjouterDes"}
         className="bg-blue-500 self-start  hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
       >
-        Ajouter Un Bureau
+        Ajouter Une Désignation
       </NavLink>
 
       <input
         type="text"
-        placeholder="Filtrer Par Nom Département"
+        placeholder="Filtrer Par Nom Désignation"
         value={filterText}
         onChange={(e) => setFilterText(e.target.value)}
         className="w-full px-4 py-2 mb-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -75,19 +66,11 @@ const Bureau = () => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Code Bureau
+              Code Désignation
             </th>
 
             <th scope="col" className="px-6 py-3">
-              Intitule Bureau
-            </th>
-
-            <th scope="col" className="px-6 py-3">
-              étage
-            </th>
-
-            <th scope="col" className="px-6 py-3">
-              sous département associé
+              Nom Désignation
             </th>
 
             <th scope="col" className="px-6 py-3">
@@ -99,29 +82,27 @@ const Bureau = () => {
           {filteredData?.length === 0 ? (
             <tr className="text-center ">
               <td className="p-4" colSpan={3}>
-                Bureau Inexistant
+                Département Inexistant
               </td>
             </tr>
           ) : (
-            filteredData?.map((bur) => {
+            filteredData?.map((des) => {
               return (
                 <tr
-                  key={bur.idBureau}
+                  key={des.idDes}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  <td className="px-6 py-4">{bur.idBureau}</td>
-                  <td className="px-6 py-4">{bur.intitule}</td>
-                  <td className="px-6 py-4">{bur.etagere}</td>
-                  <td className="px-6 py-4">{bur.nomSubDep}</td>
+                  <td className="px-6 py-4">{des.idDes}</td>
+                  <td className="px-6 py-4">{des.nomDes}</td>
                   <td className="px-6 py-4 flex gap-2">
                     <NavLink
-                      to={`/UpdateBur/${bur.idBureau}`}
+                      to={`/UpdateDes/${des.idDes}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       Edit
                     </NavLink>
                     <button
-                      onClick={() => handleDelete(bur.idBureau)}
+                      onClick={() => handleDelete(des.idDes)}
                       className="font-medium text-red-600 dark:text-red-500 hover:underline"
                     >
                       Delete
@@ -137,4 +118,4 @@ const Bureau = () => {
   );
 };
 
-export default Bureau;
+export default Designation;

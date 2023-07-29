@@ -85,6 +85,7 @@ const Sidebar = () => {
         "Liste Des Employeurs",
         "Désignation",
         "Bureau Occupé",
+        "Grade",
         "Présence",
         "Congés",
         "Paiements",

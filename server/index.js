@@ -7,6 +7,7 @@ import echelleRoute from "./routes/echelleRoute.js";
 import echelantRoute from "./routes/echelantRoute.js";
 import departementRoute from "./routes/departementRoute.js";
 import sousDepRouter from "./routes/sousDepRouter.js";
+import presenceRoute from "./routes/presenceRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -42,6 +43,7 @@ app.use("/api/echelle", echelleRoute);
 app.use("/api/echelant", echelantRoute);
 app.use("/api/dep", departementRoute);
 app.use("/api/subDep", sousDepRouter);
+app.use("/api/presence", presenceRoute);
 
 app.listen(5000, () => {
   console.log("API working");
