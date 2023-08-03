@@ -1,6 +1,37 @@
 import { db } from "../db/connect.js";
-import { v4 as uuidv4 } from "uuid"; // Import the UUID v4 generator
+import { v4 as uuidv4 } from "uuid";
 
+//get presence
+
+export const getPresence = (req, res) => {
+  const q = `SELECT  emp.immatricule, emp.nom, emp.prenom, p.dateArr, p.datePart, p.idPres
+            FROM presence p
+            JOIN employeur emp
+            ON p.immatricule = emp.immatricule`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
+// get one presence
+
+export const getPresenceById = (req, res) => {
+  const idPre = req.params.id;
+  const q = `SELECT * FROM presence WHERE idPres = ?`;
+
+  db.query(q, [idPre], (err, results) => {
+    if (err) {
+      res.status(500).send("Erreur selection presence");
+    } else if (results.length === 0) {
+      res.status(404).send("pas de presence");
+    } else {
+      res.send(results[0]);
+    }
+  });
+};
+
+// add presence
 export const addPresence = (req, res) => {
   const { dateArr, datePart, immatricule } = req.body;
 
@@ -37,9 +68,11 @@ export const addPresence = (req, res) => {
         }
 
         if (presenceResults.length > 0) {
-          return res.status(400).json({
-            error: "An employeur can only have one presence record per day.",
-          });
+          return res
+            .status(400)
+            .send(
+              "Un employeur ne peut avoir qu'un seul enregistrement de présence par jour."
+            );
         }
 
         // Generate a UUID for the presence record
@@ -55,7 +88,7 @@ export const addPresence = (req, res) => {
         if (arrTime < eightThirtyAM) {
           return res
             .status(400)
-            .json({ error: "dateArr should be greater than 8:30 AM." });
+            .send("La Date D'arrivée  Doit Être Supérieur A 8:30.");
         }
 
         // Check if datePart is greater than dateArr (compare time values only)
@@ -64,7 +97,7 @@ export const addPresence = (req, res) => {
         if (partTimeValue <= arrTimeValue) {
           return res
             .status(400)
-            .json({ error: "datePart should be greater than dateArr." });
+            .send("Date Sorti Doit Être Supérieur A La Date D'arrivée.");
         }
 
         // Check if datePart is not greater than 6:00 PM (18:00)
@@ -72,7 +105,7 @@ export const addPresence = (req, res) => {
         if (partTimeValue > sixPM) {
           return res
             .status(400)
-            .json({ error: "datePart should not be greater than 6:00 PM." });
+            .send("La Date De  Départ Ne Doit Pas Être Inférieur à 18h00.");
         }
 
         // If all checks pass, proceed with the insertion into the "presence" table
@@ -87,9 +120,7 @@ export const addPresence = (req, res) => {
               return res.status(500).json({ error: "Failed to insert data." });
             }
 
-            return res
-              .status(201)
-              .json({ message: "Data inserted successfully." });
+            return res.status(201).json({ message: "Présence Ajouté" });
           }
         );
       }
@@ -133,7 +164,7 @@ export const updatePresence = (req, res) => {
     if (arrTime < eightThirtyAM) {
       return res
         .status(400)
-        .json({ error: "dateArr should be greater than 8:30 AM." });
+        .send("La Date D'arrivée  Doit Être Supérieur A 8:30.");
     }
 
     // Check if datePart is greater than dateArr (compare time values only)
@@ -142,7 +173,7 @@ export const updatePresence = (req, res) => {
     if (partTimeValue <= arrTimeValue) {
       return res
         .status(400)
-        .json({ error: "datePart should be greater than dateArr." });
+        .send("Date Sorti Doit Être Supérieur A La Date D'arrivée.");
     }
 
     // Check if datePart is not greater than 6:00 PM (18:00)
@@ -150,7 +181,7 @@ export const updatePresence = (req, res) => {
     if (partTimeValue > sixPM) {
       return res
         .status(400)
-        .json({ error: "datePart should not be greater than 6:00 PM." });
+        .send("La Date De  Départ Ne Doit Pas Être Inférieur à 18h00.");
     }
 
     // If all checks pass, proceed with the update in the "presence" table
@@ -165,7 +196,7 @@ export const updatePresence = (req, res) => {
           return res.status(500).json({ error: "Failed to update data." });
         }
 
-        return res.status(200).json({ message: "Data updated successfully." });
+        return res.status(200).send("Présence Mis à jour avec succés.");
       }
     );
   });

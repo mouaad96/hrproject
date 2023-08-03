@@ -7,7 +7,6 @@ import Employeur from "./pages/Employeur";
 import Settings from "./pages/Settings";
 import Feries from "./pages/Feries";
 import Bureau from "./pages/bureau/Bureau";
-import Presence from "./pages/Presence";
 import Auth from "./pages/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
@@ -27,6 +26,11 @@ import Designation from "./pages/designation/Designation";
 import AjouterDes from "./pages/designation/AjouterDes";
 import UpdateDes from "./pages/designation/UpdateDes";
 import EmployeurGrade from "./pages/employeur/EmployeurGrade";
+import Presence from "./pages/employeur/empPresence/Presence";
+import AjouterPresence from "./pages/employeur/empPresence/AjouterPresence";
+import Conge from "./pages/employeur/empConge/Conge";
+import AjouterConge from "./pages/employeur/empConge/AjouterConge";
+import UpdatePresence from "./pages/employeur/empPresence/UpdatePresence";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -77,14 +81,6 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/Employeurs/Présence"
-          element={
-            <RootLayout>
-              <Presence />
-            </RootLayout>
-          }
-        />
         <Route
           path="/Employeurs/Désignation"
           element={
@@ -147,16 +143,37 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/Employeurs/Présence"
+          element={
+            <RootLayout>
+              <Presence />
+            </RootLayout>
+          }
+        />
+
+        <Route
+          path="/Employeurs/Congés"
+          element={
+            <RootLayout>
+              <Conge />
+            </RootLayout>
+          }
+        />
+
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
         <Route path="/AjouterDep" element={<AjouterDep />} />
         <Route path="/AjouterBur" element={<AjouterBur />} />
         <Route path="/AjouterDes" element={<AjouterDes />} />
+        <Route path="/AjouterPresence" element={<AjouterPresence />} />
         <Route path="/AjouterSubDep" element={<AjouterSousDep />} />
+        <Route path="/AjouterConge" element={<AjouterConge />} />
         <Route path="/UpdateEmp/:empId" element={<UpdateEmp />} />
         <Route path="/UpdateDep/:depId" element={<UpdateDep />} />
         <Route path="/UpdateDes/:desId" element={<UpdateDes />} />
         <Route path="/UpdateBur/:idBur" element={<UpdateBur />} />
+        <Route path="/UpdatePresence/:presId" element={<UpdatePresence />} />
         <Route path="/UpdateSubDep/:sdId" element={<UpdateSousDep />} />
       </Routes>
     </QueryClientProvider>
