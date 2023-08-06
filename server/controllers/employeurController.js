@@ -217,3 +217,40 @@ export const getEmpGrade = (req, res) => {
     }
   });
 };
+
+export const updateEmpBureau = (req, res) => {
+  const im = req.params.id;
+  const q = "UPDATE employeur SET idBureau = ? WHERE immatricule = ?";
+  db.query(q, [req.body.idBureau, im], (err, results) => {
+    if (err) {
+      res.status(500).send("Erreur de mise a jour");
+    } else {
+      res.send("Employeur Bureau et mis a jour");
+    }
+  });
+};
+
+export const updateEmpDesignation = (req, res) => {
+  const im = req.params.id;
+  const q = "UPDATE employeur SET idDes = ? WHERE immatricule = ?";
+  db.query(q, [req.body.idDes, im], (err, results) => {
+    if (err) {
+      res.status(500).send("Erreur de mise a jour");
+    } else {
+      res.send("Employeur Designation et mis a jour");
+    }
+  });
+};
+
+export const updateEmpGrade = (req, res) => {
+  const im = req.params.id;
+  const q =
+    "UPDATE employeur SET echelle = ?, echelant = ? WHERE immatricule = ?";
+  db.query(q, [req.body.echelle, req.body.echelant, im], (err, results) => {
+    if (err) {
+      res.status(500).send("Erreur de mise a jour");
+    } else {
+      res.send("Employeur Grade et mis a jour");
+    }
+  });
+};

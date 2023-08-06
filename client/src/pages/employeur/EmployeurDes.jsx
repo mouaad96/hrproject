@@ -5,6 +5,7 @@ import { BsPencilSquare, BsLink45Deg } from "react-icons/bs";
 
 import { AiOutlineSearch } from "react-icons/ai";
 import PageTitle from "../../components/PageTitle";
+import { NavLink } from "react-router-dom";
 
 const EmployeurDes = () => {
   const { isLoading, error, data } = useQuery({
@@ -93,12 +94,12 @@ const EmployeurDes = () => {
                 <td className="px-6 py-4">{empDes.nom}</td>
                 <td className="px-6 py-4">{empDes.nomDes}</td>
                 <td className="px-6 py-4 flex gap-2">
-                  <a
-                    href={`#/:${empDes.immatricule}`}
+                  <NavLink
+                    to={`/UpdateEmpDes/${empDes.immatricule}`}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     <BsPencilSquare className="text-2xl" />
-                  </a>
+                  </NavLink>
                 </td>
               </tr>
             );

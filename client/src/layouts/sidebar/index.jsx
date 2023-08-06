@@ -164,7 +164,7 @@ const Sidebar = () => {
             </li>
 
             <li className="border-t pt-5 border-slate-300 ">
-              <NavLink to={"/settings"} className="link">
+              <NavLink to={"/Compte"} className="link">
                 <AiOutlineUser size={23} className="min-w-max" />
                 Compte
               </NavLink>

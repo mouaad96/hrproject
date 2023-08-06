@@ -8,6 +8,7 @@ import { MdGrade } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 
 import PageTitle from "../../components/PageTitle";
+import { NavLink } from "react-router-dom";
 
 const EmployeurGrade = () => {
   const { isLoading, error, data } = useQuery({
@@ -97,12 +98,12 @@ const EmployeurGrade = () => {
                 <td className="px-6 py-4">{empGr.echelle}</td>
                 <td className="px-6 py-4">{empGr.echelant}</td>
                 <td className="px-6 py-4 flex gap-2">
-                  <a
-                    href={`#/:${empGr.immatricule}`}
+                  <NavLink
+                    to={`/UpdateEmpGrade/${empGr.immatricule}`}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                   >
                     <BsPencilSquare className="text-2xl" />
-                  </a>
+                  </NavLink>
                 </td>
               </tr>
             );

@@ -55,58 +55,60 @@ const Departement = () => {
         className="w-full px-4 py-2 mb-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Code Département
-            </th>
+      <div className="max-h-80 overflow-y-auto scrollbar">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Code Département
+              </th>
 
-            <th scope="col" className="px-6 py-3">
-              Nom Département
-            </th>
+              <th scope="col" className="px-6 py-3">
+                Nom Département
+              </th>
 
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData?.length === 0 ? (
-            <tr className="text-center ">
-              <td className="p-4" colSpan={3}>
-                Département Inexistant
-              </td>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
-          ) : (
-            filteredData?.map((dep) => {
-              return (
-                <tr
-                  key={dep.idDep}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <td className="px-6 py-4">{dep.idDep}</td>
-                  <td className="px-6 py-4">{dep.nomDep}</td>
-                  <td className="px-6 py-4 flex gap-2">
-                    <NavLink
-                      to={`/UpdateDep/${dep.idDep}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </NavLink>
-                    <button
-                      onClick={() => handleDelete(dep.idDep)}
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredData?.length === 0 ? (
+              <tr className="text-center ">
+                <td className="p-4" colSpan={3}>
+                  Département Inexistant
+                </td>
+              </tr>
+            ) : (
+              filteredData?.map((dep) => {
+                return (
+                  <tr
+                    key={dep.idDep}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
+                    <td className="px-6 py-4">{dep.idDep}</td>
+                    <td className="px-6 py-4">{dep.nomDep}</td>
+                    <td className="px-6 py-4 flex gap-2">
+                      <NavLink
+                        to={`/UpdateDep/${dep.idDep}`}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </NavLink>
+                      <button
+                        onClick={() => handleDelete(dep.idDep)}
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -2,9 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
 import AllApps from "./pages/AllApps";
 import Departement from "./pages/departement/Departement";
-import Authentication from "./pages/Authentication";
 import Employeur from "./pages/Employeur";
-import Settings from "./pages/Settings";
 import Feries from "./pages/Feries";
 import Bureau from "./pages/bureau/Bureau";
 import Auth from "./pages/Auth";
@@ -31,6 +29,10 @@ import AjouterPresence from "./pages/employeur/empPresence/AjouterPresence";
 import Conge from "./pages/employeur/empConge/Conge";
 import AjouterConge from "./pages/employeur/empConge/AjouterConge";
 import UpdatePresence from "./pages/employeur/empPresence/UpdatePresence";
+import UpdateEmpBur from "./pages/employeur/UpdateEmpBur";
+import UpdateEmpDes from "./pages/employeur/UpdateEmpDes";
+import UpdateEmpGrade from "./pages/employeur/UpdateEmpGrade";
+import Compte from "./pages/Compte";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -48,26 +50,10 @@ const App = () => {
         />
 
         <Route
-          path="/authentication"
-          element={
-            <RootLayout>
-              <Authentication />
-            </RootLayout>
-          }
-        />
-        <Route
           path="/Feries"
           element={
             <RootLayout>
               <Feries />
-            </RootLayout>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <RootLayout>
-              <Settings />
             </RootLayout>
           }
         />
@@ -160,6 +146,7 @@ const App = () => {
             </RootLayout>
           }
         />
+        <Route path="/Compte" element={<Compte />} />
 
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
@@ -175,6 +162,9 @@ const App = () => {
         <Route path="/UpdateBur/:idBur" element={<UpdateBur />} />
         <Route path="/UpdatePresence/:presId" element={<UpdatePresence />} />
         <Route path="/UpdateSubDep/:sdId" element={<UpdateSousDep />} />
+        <Route path="/UpdateEmpBur/:ima" element={<UpdateEmpBur />} />
+        <Route path="/UpdateEmpDes/:ima" element={<UpdateEmpDes />} />
+        <Route path="/UpdateEmpGrade/:ima" element={<UpdateEmpGrade />} />
       </Routes>
     </QueryClientProvider>
   );
