@@ -11,6 +11,7 @@ import {
   updateEmpGrade,
   updateEmpDesignation,
   updateEmpBureau,
+  updatePass,
 } from "../controllers/employeurController.js";
 
 const router = express.Router();
@@ -26,5 +27,6 @@ router.put("/updateGrade/:id", updateEmpGrade);
 router.put("/updateDes/:id", updateEmpDesignation);
 router.put("/updateBur/:id", updateEmpBureau);
 router.delete("/delete/:id", deleteEmp);
+router.put("/updateMdp", updatePass);
 
 export default router;

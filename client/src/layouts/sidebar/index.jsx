@@ -8,7 +8,7 @@ import {
   AiOutlineUser,
   AiOutlineDesktop,
 } from "react-icons/ai";
-import { BsFillBuildingsFill } from "react-icons/bs";
+import { BsFillBuildingsFill, BsFillCalendarCheckFill } from "react-icons/bs";
 
 import { useMediaQuery } from "react-responsive";
 import { MdMenu, MdPeople, MdLogout, MdOutlineTaskAlt } from "react-icons/md";
@@ -127,16 +127,14 @@ const Sidebar = () => {
          h-screen "
       >
         <div className="flex items-center gap-2.5 font-medium border-b py-3 border-slate-300  mx-3">
-          <img
-            src="https://img.icons8.com/color/512/firebase.png"
-            width={45}
-            alt=""
-          />
-          <span className="text-xl whitespace-pre">Commune R.H</span>
+          <h1 className="uppercase flex items-center justify-center font-bold">
+            <span className="text-blue-600 text-5xl font-bold">C</span>
+            <span>ommune</span>
+          </h1>
         </div>
 
         <div className="flex flex-col  h-full">
-          <ul className="whitespace-pre px-2.5 text-[0.9rem] py-5 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[68%] h-[70%]">
+          <ul className="whitespace-pre px-2.5 text-[0.9rem] py-5 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[85%] h-[85%]">
             <li>
               <NavLink to={"/"} className="link">
                 <AiFillHome size={23} className="min-w-max" />
@@ -157,9 +155,15 @@ const Sidebar = () => {
               </div>
             )}
             <li>
-              <NavLink to={"/authentication"} className="link">
+              <NavLink to={"/Demandes"} className="link">
                 <AiFillMessage size={23} className="min-w-max" />
-                Messages
+                Demandes
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to={"/Feries"} className="link">
+                <BsFillCalendarCheckFill size={23} className="min-w-max" />
+                Jours Feries
               </NavLink>
             </li>
 

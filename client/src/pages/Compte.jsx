@@ -17,6 +17,13 @@ import { toast } from "react-toastify";
 
 const Compte = () => {
   const { currentUser } = useContext(AuthContext);
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:5000/api/auth/logout", { withCredentials: true })
+      .then((resp) => toast.info(resp.data));
+    localStorage.clear();
+    navigate("/login");
+  };
 
   const formatedDate = moment(currentUser?.dateN, "YYYY/MM/DD").format(
     "YYYY-MM-DD"
@@ -24,6 +31,7 @@ const Compte = () => {
 
   const [inputs, setInputs] = useState({
     immatricule: currentUser?.immatricule || "",
+    nomCpt: currentUser?.nomCpt || "",
     prenom: currentUser?.prenom || "",
     nom: currentUser?.nom || "",
     dateN: formatedDate || "",
@@ -39,11 +47,11 @@ const Compte = () => {
     etatFam: currentUser?.etatFam || "",
   });
 
-  // If the currentUser changes, update the inputs state accordingly
   useEffect(() => {
     setInputs((prevInputs) => ({
       ...prevInputs,
       immatricule: currentUser?.immatricule || "",
+      nomCpt: currentUser?.nomCpt || "",
       prenom: currentUser?.prenom || "",
       nom: currentUser?.nom || "",
       dateN: formatedDate || "",
@@ -60,6 +68,13 @@ const Compte = () => {
     }));
   }, [currentUser]);
 
+  const [securityInputs, setSecurityInputs] = useState({
+    nomCpt: inputs.nomCpt,
+    oldMdp: "",
+    mdp: "",
+    confMdp: "",
+  });
+
   const [activeButton, setActiveButton] = useState("button1");
 
   const handleButtonClick = (button) => {
@@ -70,7 +85,7 @@ const Compte = () => {
     return `px-4 py-3 text-left
       ${
         activeButton === buttonName
-          ? "bg-gray-300 text-gray-800 border-b-4 border-blue-400"
+          ? "bg-gray-300 text-gray-800 border-r-4 border-blue-400"
           : ""
       }
     `;
@@ -90,6 +105,47 @@ const Compte = () => {
   };
   const updateMutation = useMutation(updateEmployee);
 
+  const updateEmployeeMdp = async (employeeMdp) => {
+    try {
+      await makeRequest.put(`/emp/updateMdp`, employeeMdp);
+    } catch (err) {
+      throw err;
+    }
+  };
+  const updateMdpMutation = useMutation(updateEmployeeMdp);
+
+  const handleSubmitMdp = (e) => {
+    e.preventDefault();
+
+    // Check if "Mot de passe" and "Confirmer le mot de passe" inputs match
+    if (securityInputs.mdp !== securityInputs.confMdp) {
+      // Show error message or handle it as needed
+      toast.error("Les mots de passe ne correspondent pas");
+      return; // Exit early
+    }
+
+    // The passwords match, proceed with form submission
+    // ...
+    // Your existing code to handle form submission
+
+    updateMdpMutation
+      .mutateAsync(securityInputs)
+      .then(() => {
+        toast.info("Mot de passe mis à jour!");
+
+        // Clear the password fields
+        setSecurityInputs((prevInputs) => ({
+          ...prevInputs,
+          oldMdp: "",
+          mdp: "",
+          confMdp: "",
+        }));
+      })
+      .catch((error) => {
+        toast.error(error.response.data);
+      });
+  };
+
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -98,20 +154,22 @@ const Compte = () => {
     setInputs((prev) => ({ ...prev, image: file.base64 }));
   };
 
+  const handleChangeSecurity = (e) => {
+    setSecurityInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(inputs);
 
     updateMutation
-      .mutateAsync(inputs) // Use mutateAsync to await the Promise returned by addEmployee
+      .mutateAsync(inputs)
       .then(() => {
-        // This block will run if the API call is successful
         localStorage.setItem("user", JSON.stringify(inputs));
         toast.info("Profile Mis A Jour!");
         window.location.reload();
       })
       .catch((error) => {
-        // This block will run if the API call encounters an error
         toast.error(error.response.data);
       });
   };
@@ -144,7 +202,7 @@ const Compte = () => {
           </button>
         </div>
         {activeButton === "button1" ? (
-          <form className="bg-gray-700 w-full p-4  overflow-y-scroll h-screen">
+          <form className="bg-gray-700 w-full px-4 py-6  overflow-y-scroll h-screen">
             <PageTitle
               title={"Informations Personnelles"}
               color={"text-gray-200"}
@@ -178,21 +236,12 @@ const Compte = () => {
             </div>
 
             <div className="mb-6">
-              <label
-                htmlFor="Immatricule"
-                className="block mb-2 text-sm font-medium text-white "
-              >
+              <label className="block mb-2 text-sm font-medium text-white">
                 Immatricule
               </label>
-              <input
-                type="text"
-                id="Immatricule"
-                className="text-yellow-600 cursor-not-allowed text-md font-bold rounded-lg block w-full p-2.5 bg-gray-500 border outline-none border-yellow-500"
-                name="immatricule"
-                value={inputs.immatricule}
-                disabled
-                readOnly
-              />
+              <p className="p-2 font-bold bg-blue-400 w-16 text-center rounded-lg">
+                {inputs.immatricule}
+              </p>
               <p className="mt-2 text-sm text-yellow-500">
                 Vous Ne Pouvez Pas Change Votre Immatricule !
               </p>
@@ -343,7 +392,7 @@ const Compte = () => {
                 </label>
               </div>
             </div>
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3 py-4 justify-center">
               <ButtonLink
                 nav="/"
                 text="Retourner a la page d'accueil"
@@ -359,8 +408,82 @@ const Compte = () => {
             </div>
           </form>
         ) : (
-          <form className="bg-gray-700 w-full">
-            <input type="text" />
+          <form className="bg-gray-700 w-full px-4 py-6  overflow-y-scroll h-screen">
+            <PageTitle title={"Sécurité Du Compte"} color={"text-gray-200"} />
+            <div className="mb-6">
+              <label
+                className="block mb-2 text-sm font-medium text-white"
+                htmlFor="nomCpt"
+              >
+                Nom De Compte
+              </label>
+              <input
+                type="text"
+                id="nomCpt"
+                className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-transparent text-white"
+                name="nomCpt"
+                defaultValue={securityInputs.nomCpt}
+              />
+            </div>
+            <div className="mb-6">
+              <label
+                className="block mb-2 text-sm font-medium text-white"
+                htmlFor="oldP"
+              >
+                Ancien mot de passe
+              </label>
+              <input
+                type="password"
+                id="oldP"
+                className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-transparent text-white"
+                name="oldMdp"
+                onChange={handleChangeSecurity}
+              />
+            </div>
+            <div className="mb-6">
+              <label
+                className="block mb-2 text-sm font-medium text-white"
+                htmlFor="mdp"
+              >
+                Mot de passe
+              </label>
+              <input
+                type="password"
+                id="mdp"
+                className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-transparent text-white"
+                name="mdp"
+                onChange={handleChangeSecurity}
+              />
+            </div>
+            <div className="mb-6">
+              <label
+                className="block mb-2 text-sm font-medium text-white"
+                htmlFor="confMdp"
+              >
+                Confirmer le mot de passe
+              </label>
+              <input
+                type="password"
+                id="confMdp"
+                className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-transparent text-white"
+                name="confMdp"
+                onChange={handleChangeSecurity}
+              />
+            </div>
+            <div className="flex gap-3 py-4 justify-center">
+              <ButtonLink
+                nav="/"
+                text="Retourner a la page d'accueil"
+                icon={<AiOutlineArrowLeft />}
+              />
+              <button
+                onClick={handleSubmitMdp}
+                className="bg-green-600 flex items-center justify-center hover:bg-green-700 text-white  font-semibold py-2 px-5 rounded-full"
+              >
+                <AiFillSave />
+                Enregistrer les Changements
+              </button>
+            </div>
           </form>
         )}
       </div>

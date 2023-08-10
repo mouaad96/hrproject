@@ -254,3 +254,46 @@ export const updateEmpGrade = (req, res) => {
     }
   });
 };
+
+export const updatePass = async (req, res) => {
+  const { nomCpt, oldMdp, mdp } = req.body;
+  try {
+    const getUserQuery = "SELECT * FROM employeur WHERE nomCpt = ?";
+    db.query(getUserQuery, [nomCpt], (err, results) => {
+      if (err) {
+        console.error("Error fetching user:", err);
+        return res.status(500).send("Internal server error");
+      }
+
+      if (results.length === 0) {
+        return res.status(404).send("User not found");
+      }
+
+      const passwordMatch = bcryptjs.compareSync(oldMdp, results[0].mdp);
+
+      if (!passwordMatch) {
+        return res.status(401).send("Invalid old password");
+      }
+
+      const salt = bcryptjs.genSaltSync(10);
+      const hashedNewPassword = bcryptjs.hashSync(mdp, salt);
+
+      const updateQuery = "UPDATE employeur SET mdp = ? WHERE nomCpt = ?";
+      db.query(
+        updateQuery,
+        [hashedNewPassword, nomCpt],
+        (updateErr, updateResults) => {
+          if (updateErr) {
+            console.error("Error updating password:", updateErr);
+            res.status(500).send("Error updating password");
+          } else {
+            res.status(200).send("Password updated successfully");
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).send("Internal server error");
+  }
+};

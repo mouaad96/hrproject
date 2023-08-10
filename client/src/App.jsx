@@ -3,7 +3,6 @@ import RootLayout from "./layouts/RootLayout";
 import AllApps from "./pages/AllApps";
 import Departement from "./pages/departement/Departement";
 import Employeur from "./pages/Employeur";
-import Feries from "./pages/Feries";
 import Bureau from "./pages/bureau/Bureau";
 import Auth from "./pages/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,6 +32,11 @@ import UpdateEmpBur from "./pages/employeur/UpdateEmpBur";
 import UpdateEmpDes from "./pages/employeur/UpdateEmpDes";
 import UpdateEmpGrade from "./pages/employeur/UpdateEmpGrade";
 import Compte from "./pages/Compte";
+import Ferie from "./pages/ferie/Ferie";
+import AjouterFerie from "./pages/ferie/AjouterFerie";
+import UpdateFerie from "./pages/ferie/UpdateFerie";
+import Demande from "./pages/demande/Demande";
+import AjouterDemande from "./pages/demande/AjouterDemande";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -45,15 +49,6 @@ const App = () => {
           element={
             <RootLayout>
               <AllApps />
-            </RootLayout>
-          }
-        />
-
-        <Route
-          path="/Feries"
-          element={
-            <RootLayout>
-              <Feries />
             </RootLayout>
           }
         />
@@ -137,6 +132,14 @@ const App = () => {
             </RootLayout>
           }
         />
+        <Route
+          path="/Feries"
+          element={
+            <RootLayout>
+              <Ferie />
+            </RootLayout>
+          }
+        />
 
         <Route
           path="/Employeurs/Congés"
@@ -146,10 +149,23 @@ const App = () => {
             </RootLayout>
           }
         />
+
+        <Route
+          path="/Demandes"
+          element={
+            <RootLayout>
+              <Demande />
+            </RootLayout>
+          }
+        />
+
         <Route path="/Compte" element={<Compte />} />
+        <Route path="/AjouterFer" element={<AjouterFerie />} />
+        <Route path="/UpdateFer/:ferId" element={<UpdateFerie />} />
 
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
+        <Route path="/AjouterDem" element={<AjouterDemande />} />
         <Route path="/AjouterDep" element={<AjouterDep />} />
         <Route path="/AjouterBur" element={<AjouterBur />} />
         <Route path="/AjouterDes" element={<AjouterDes />} />

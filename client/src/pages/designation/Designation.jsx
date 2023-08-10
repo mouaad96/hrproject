@@ -45,6 +45,7 @@ const Designation = () => {
 
   // Filtering logic based on filterText
   const filteredData = data?.filter((des) => des.nomDes.includes(filterText));
+
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
       <NavLink

@@ -62,52 +62,51 @@ const Affectation = () => {
           <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
         </div>
       </div>
-      <div className="w-full max-w-screen-lg overflow-y-auto">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Immatricule
-              </th>
-              <th scope="col" className="px-6 py-3">
-                prenom
-              </th>
-              <th scope="col" className="px-6 py-3">
-                nom
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Intitule de bureau
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData?.map((burAffec) => {
-              return (
-                <tr
-                  key={burAffec.immatricule}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
-                  <td className="px-6 py-4">{burAffec.immatricule}</td>
-                  <td className="px-6 py-4">{burAffec.prenom}</td>
-                  <td className="px-6 py-4">{burAffec.nom}</td>
-                  <td className="px-6 py-4">{burAffec.intitule}</td>
-                  <td className="px-6 py-4 flex gap-2">
-                    <NavLink
-                      to={`/UpdateEmpBur/${burAffec.immatricule}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      <BsPencilSquare className="text-2xl" />
-                    </NavLink>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="px-6 py-3">
+              Immatricule
+            </th>
+            <th scope="col" className="px-6 py-3">
+              prenom
+            </th>
+            <th scope="col" className="px-6 py-3">
+              nom
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Intitule de bureau
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredData?.map((burAffec) => {
+            return (
+              <tr
+                key={burAffec.immatricule}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              >
+                <td className="px-6 py-4">{burAffec.immatricule}</td>
+                <td className="px-6 py-4">{burAffec.prenom}</td>
+                <td className="px-6 py-4">{burAffec.nom}</td>
+                <td className="px-6 py-4">{burAffec.intitule}</td>
+                <td className="px-6 py-4 flex gap-2">
+                  <NavLink
+                    to={`/UpdateEmpBur/${burAffec.immatricule}`}
+                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    <BsPencilSquare className="text-2xl" />
+                  </NavLink>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

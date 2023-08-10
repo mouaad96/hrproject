@@ -13,7 +13,7 @@ function RootLayout({ children }) {
         <Sidebar />
         <div className=" flex-1 ">
           <TopBar data={currentUser} />
-          <main className="max-w-6xl   mx-auto">{children}</main>
+          <main className="max-w-5xl  mx-auto">{children}</main>
         </div>
       </div>
     </div>
