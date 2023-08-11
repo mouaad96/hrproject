@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Input from "../../components/Input";
 import { NavLink, useNavigate } from "react-router-dom";
 import { makeRequest } from "../../axios";
 import { useMutation } from "@tanstack/react-query";
@@ -58,10 +57,10 @@ const AjouterDemande = () => {
       </NavLink>
       <form className="flex flex-col justify-center align-middle py-10">
         <div className="mb-6">
-          <label className="block mb-2 text-sm font-medium text-white">
+          <label className="mb-2 text-sm font-medium text-white">
             Immatricule
           </label>
-          <p className="p-2 font-bold bg-blue-400 w-16 text-center rounded-lg">
+          <p className="p-2 font-bold bg-blue-400 w-fit text-center rounded-lg">
             {inputs.immatricule}
           </p>
           <p className="mt-2 text-sm text-yellow-500">

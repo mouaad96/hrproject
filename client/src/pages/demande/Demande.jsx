@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import moment from "moment";
-import { BsPencilSquare, BsListCheck, BsCardChecklist } from "react-icons/bs";
+import { BsCardChecklist } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlinePlus, AiOutlineSearch, AiFillEye } from "react-icons/ai";
 import { AuthContext } from "../../context/AuthContext";
@@ -25,13 +25,33 @@ const Demande = () => {
   };
 
   // api get call
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["demande"],
-    queryFn: () =>
-      makeRequest.get(`/dem/list`).then((res) => {
-        return res.data;
-      }),
+  const {
+    isLoading: isLoadingEmpDem,
+    error: errorEmpDem,
+    data: empDem,
+  } = useQuery({
+    queryKey: ["empDem"],
+    queryFn: async () => {
+      const empDemResponse = await makeRequest.get(
+        `/dem/empDem/${currentUser?.immatricule}`
+      );
+      return empDemResponse.data;
+    },
   });
+
+  // Query for demande data
+  const {
+    isLoading: isLoadingDemande,
+    error: errorDemande,
+    data: demande,
+  } = useQuery({
+    queryKey: ["demande"],
+    queryFn: async () => {
+      const demandeResponse = await makeRequest.get(`/dem/list`);
+      return demandeResponse.data;
+    },
+  });
+
   queryClient.invalidateQueries({ queryKey: ["demande"] });
 
   const demandeMutation = useMutation(deleteDemande, {
@@ -46,16 +66,20 @@ const Demande = () => {
     demandeMutation.mutate(demId);
   };
 
+  const employeurIsAdmin = currentUser.isAdmin ? true : false; // You need to replace this with the actual logic to determine if the employeur is an admin
+
   const [filterText, setFilterText] = useState(""); // State variable for filtering
   const [filterType, setFilterType] = useState("immatricule");
   // Filtering logic based on filterText
-  const filteredData = data?.filter((dem) =>
+  const filteredData = demande?.filter((dem) =>
     dem[filterType].toString().toLowerCase().includes(filterText.toLowerCase())
   );
 
   const handleFilterTypeChange = (e) => {
     setFilterType(e.target.value);
   };
+
+  const dataArray = employeurIsAdmin ? filteredData : empDem;
 
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
@@ -74,33 +98,37 @@ const Demande = () => {
           />
         )}
 
-        <div className="flex gap-3">
-          <div className="flex items-center gap-2">
-            <label className="text-sm" htmlFor="filter">
-              Type De Filtre
-            </label>
-            <select
-              id="filter"
-              className="w-auto  py-2 px-2  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={filterType}
-              onChange={handleFilterTypeChange}
-            >
-              <option value="immatirule">Immatricule</option>
+        {currentUser?.isAdmin ? (
+          <div className="flex gap-3">
+            <div className="flex items-center gap-2">
+              <label className="text-sm" htmlFor="filter">
+                Type De Filtre
+              </label>
+              <select
+                id="filter"
+                className="w-auto  py-2 px-2  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={filterType}
+                onChange={handleFilterTypeChange}
+              >
+                <option value="immatirule">Immatricule</option>
 
-              <option value="demande">Demande</option>
-            </select>
+                <option value="demande">Demande</option>
+              </select>
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={`Filtrer Par ${filterType}`}
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="w-auto  pl-8 pr-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
+            </div>
           </div>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder={`Filtrer Par ${filterType}`}
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="w-auto  pl-8 pr-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
-          </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
       <div className="max-h-96 overflow-y-auto scrollbar">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
@@ -128,14 +156,14 @@ const Demande = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredData?.length === 0 ? (
+            {dataArray?.length === 0 ? (
               <tr className="text-center ">
                 <td className="p-6" colSpan={5}>
                   Pas De Demande
                 </td>
               </tr>
             ) : (
-              filteredData?.map((dem) => {
+              dataArray?.map((dem) => {
                 return (
                   <tr
                     key={dem.idDem}
@@ -150,7 +178,7 @@ const Demande = () => {
 
                     <td className="px-6 py-4 flex align-middle  gap-2">
                       <NavLink
-                        to={`/UpdatePresence/${dem.idDem}`}
+                        to={`/Demande/${dem.idDem}`}
                         className="font-medium text-blue-600 hover:text-blue-500"
                       >
                         <AiFillEye className="text-2xl" />

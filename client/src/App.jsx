@@ -37,6 +37,7 @@ import AjouterFerie from "./pages/ferie/AjouterFerie";
 import UpdateFerie from "./pages/ferie/UpdateFerie";
 import Demande from "./pages/demande/Demande";
 import AjouterDemande from "./pages/demande/AjouterDemande";
+import SingleDemande from "./pages/demande/SingleDemande";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -162,7 +163,7 @@ const App = () => {
         <Route path="/Compte" element={<Compte />} />
         <Route path="/AjouterFer" element={<AjouterFerie />} />
         <Route path="/UpdateFer/:ferId" element={<UpdateFerie />} />
-
+        <Route path="/Demande/:demId" element={<SingleDemande />} />
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
         <Route path="/AjouterDem" element={<AjouterDemande />} />

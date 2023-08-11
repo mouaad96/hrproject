@@ -28,6 +28,26 @@ export const getDemandeById = (req, res) => {
   });
 };
 
+export const getEmployeurDemandes = (req, res) => {
+  const immatricule = req.params.id;
+  const selectQuery = `
+        SELECT *
+        FROM demandes
+        WHERE immatricule = ?
+      `;
+  db.query(selectQuery, [immatricule], (err, data) => {
+    console.log(data);
+    if (err) {
+      return res.status(500).json(err);
+    }
+    if (data.length === 0) {
+      return res.status(404).send("pas de demandes");
+    }
+
+    return res.send(data);
+  });
+};
+
 export const addDemande = (req, res) => {
   const idDem = uuidv4();
   const { demande, motif, dateDem, statutDem, immatricule } = req.body;

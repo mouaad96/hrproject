@@ -6,6 +6,9 @@ module.exports = {
       fontFamily: {
         Montserrat: "Montserrat",
       },
+      screens: {
+        print: { raw: "print" },
+      },
       colors: {
         primary: {
           50: "#eff6ff",
