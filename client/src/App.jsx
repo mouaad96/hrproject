@@ -38,6 +38,10 @@ import UpdateFerie from "./pages/ferie/UpdateFerie";
 import Demande from "./pages/demande/Demande";
 import AjouterDemande from "./pages/demande/AjouterDemande";
 import SingleDemande from "./pages/demande/SingleDemande";
+import Famille from "./pages/famille/Famille";
+import AjouterFamille from "./pages/famille/AjouterFamille";
+import UpdateFamille from "./pages/famille/UpdateFamille";
+import SingleEmp from "./pages/employeur/SingleEmp";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -160,12 +164,23 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/Employeurs/Famille"
+          element={
+            <RootLayout>
+              <Famille />
+            </RootLayout>
+          }
+        />
+
         <Route path="/Compte" element={<Compte />} />
         <Route path="/AjouterFer" element={<AjouterFerie />} />
         <Route path="/UpdateFer/:ferId" element={<UpdateFerie />} />
         <Route path="/Demande/:demId" element={<SingleDemande />} />
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
+        <Route path="/SingleEmp/:eId" element={<SingleEmp />} />
+        <Route path="/AjouterFam" element={<AjouterFamille />} />
         <Route path="/AjouterDem" element={<AjouterDemande />} />
         <Route path="/AjouterDep" element={<AjouterDep />} />
         <Route path="/AjouterBur" element={<AjouterBur />} />
@@ -182,6 +197,7 @@ const App = () => {
         <Route path="/UpdateEmpBur/:ima" element={<UpdateEmpBur />} />
         <Route path="/UpdateEmpDes/:ima" element={<UpdateEmpDes />} />
         <Route path="/UpdateEmpGrade/:ima" element={<UpdateEmpGrade />} />
+        <Route path="/UpdateFam/:famId" element={<UpdateFamille />} />
       </Routes>
     </QueryClientProvider>
   );

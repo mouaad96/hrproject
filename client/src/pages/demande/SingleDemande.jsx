@@ -41,7 +41,7 @@ const SingleDemande = () => {
   });
 
   return (
-    <div className="bg-gray-300 py-6  h-max px-5">
+    <div className="bg-gray-800 py-6  h-max px-5">
       <div className="flex items-center justify-between">
         <NavLink
           to={"/Demandes"}
@@ -60,7 +60,7 @@ const SingleDemande = () => {
       </div>
 
       <div
-        className="px-6 border-2 border-blue-500 rounded-lg my-3 print:m-6"
+        className="px-6 border-2 text-gray-300 border-blue-500 rounded-lg my-3 print:m-6 print:text-black"
         ref={componentRef}
       >
         <h1 className="uppercase flex items-center py-4 font-bold">
@@ -92,7 +92,7 @@ const SingleDemande = () => {
       <div className="flex flex-col gap-3 p-3">
         <div className="flex items-center gap-2">
           <label
-            className="text-sm font-semibold text-black "
+            className="text-sm font-semibold text-white "
             htmlFor="demande"
           >
             Mettre A Jour Le Statut :

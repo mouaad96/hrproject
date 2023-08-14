@@ -12,6 +12,7 @@ import {
   AiOutlinePlus,
   AiOutlineSearch,
   AiOutlineOrderedList,
+  AiFillEye,
 } from "react-icons/ai";
 import PageTitle from "../components/PageTitle";
 
@@ -93,7 +94,7 @@ const Employeur = () => {
       </div>
 
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
               immatricule
@@ -113,7 +114,7 @@ const Employeur = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-center">
           {filteredData?.map((employee) => {
             return (
               <tr
@@ -125,7 +126,7 @@ const Employeur = () => {
                 <td className="px-6 py-4">{employee.prenom}</td>
                 <td className="px-6 py-4">{employee.nom}</td>
                 <td className="px-6 py-4">{employee.tel}</td>
-                <td className="px-6 py-4 flex gap-2">
+                <td className="px-6 py-4 flex justify-center gap-2">
                   <NavLink
                     to={`/UpdateEmp/${employee.immatricule}`}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -138,6 +139,12 @@ const Employeur = () => {
                   >
                     <RxCross2 className="text-2xl" />
                   </button>
+                  <NavLink
+                    to={`/SingleEmp/${employee.immatricule}`}
+                    className="font-medium text-green-600 hover:text-green-500"
+                  >
+                    <AiFillEye className="text-2xl" />
+                  </NavLink>
                 </td>
               </tr>
             );

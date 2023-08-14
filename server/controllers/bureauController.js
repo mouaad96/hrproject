@@ -1,7 +1,7 @@
 import { db } from "../db/connect.js";
 
 export const addBureau = (req, res) => {
-  //check if emp exists
+  //check if bureau exists
   const q = `SELECT * FROM bureau WHERE intitule = ?`;
   db.query(q, [req.body.intitule], (err, data) => {
     if (err) return res.status(500).json(err);

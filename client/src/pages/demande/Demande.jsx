@@ -66,20 +66,19 @@ const Demande = () => {
     demandeMutation.mutate(demId);
   };
 
-  const employeurIsAdmin = currentUser.isAdmin ? true : false; // You need to replace this with the actual logic to determine if the employeur is an admin
+  const employeurIsAdmin = currentUser.isAdmin ? true : false;
 
-  const [filterText, setFilterText] = useState(""); // State variable for filtering
+  const [filterText, setFilterText] = useState("");
   const [filterType, setFilterType] = useState("immatricule");
+
   // Filtering logic based on filterText
   const filteredData = demande?.filter((dem) =>
     dem[filterType].toString().toLowerCase().includes(filterText.toLowerCase())
   );
-
+  const dataArray = employeurIsAdmin ? filteredData : empDem;
   const handleFilterTypeChange = (e) => {
     setFilterType(e.target.value);
   };
-
-  const dataArray = employeurIsAdmin ? filteredData : empDem;
 
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
@@ -110,7 +109,7 @@ const Demande = () => {
                 value={filterType}
                 onChange={handleFilterTypeChange}
               >
-                <option value="immatirule">Immatricule</option>
+                <option value="immatricule">Immatricule</option>
 
                 <option value="demande">Demande</option>
               </select>

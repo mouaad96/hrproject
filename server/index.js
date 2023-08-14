@@ -10,6 +10,7 @@ import sousDepRouter from "./routes/sousDepRouter.js";
 import presenceRoute from "./routes/presenceRoute.js";
 import congeRoute from "./routes/congeRoute.js";
 import feriesRoute from "./routes/feriesRoute.js";
+import familleRoute from "./routes/familleRoute.js";
 import demandeRoute from "./routes/demandeRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -50,6 +51,7 @@ app.use("/api/presence", presenceRoute);
 app.use("/api/conge", congeRoute);
 app.use("/api/fer", feriesRoute);
 app.use("/api/dem", demandeRoute);
+app.use("/api/fam", familleRoute);
 
 app.listen(5000, () => {
   console.log("API working");

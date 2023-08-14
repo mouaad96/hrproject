@@ -297,3 +297,26 @@ export const updatePass = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 };
+
+export const getAllEmployeeInfos = (req, res) => {
+  const immatricule = req.params.id;
+  const query = `
+    SELECT e.*, f.*, b.*, d.nomDes AS designation
+    FROM employeur e
+    LEFT JOIN famille f ON e.immatricule = f.immatricule
+    LEFT JOIN bureau b ON e.idBureau = b.idBureau
+    LEFT JOIN designation d ON e.idDes = d.idDes
+    WHERE e.immatricule = ?
+  `;
+
+  db.query(query, [immatricule], (err, data) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+    if (data.length === 0) {
+      return res.status(404).json("emp introuvable");
+    }
+    const emp = data[0];
+    return res.status(200).json(emp);
+  });
+};

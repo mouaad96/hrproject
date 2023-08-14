@@ -36,7 +36,6 @@ export const getEmployeurDemandes = (req, res) => {
         WHERE immatricule = ?
       `;
   db.query(selectQuery, [immatricule], (err, data) => {
-    console.log(data);
     if (err) {
       return res.status(500).json(err);
     }

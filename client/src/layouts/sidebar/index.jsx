@@ -83,6 +83,7 @@ const Sidebar = () => {
       icon: MdPeople,
       menus: [
         "Liste Des Employeurs",
+        "Famille",
         "Désignation",
         "Bureau Occupé",
         "Grade",
