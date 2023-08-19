@@ -4,6 +4,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
+import { BsPencilSquare } from "react-icons/bs";
+import { RxCross2 } from "react-icons/rx";
+import ButtonLink from "../../components/ButtonLink";
+import {
+  AiOutlinePlus,
+  AiOutlineSearch,
+  AiOutlineUnorderedList,
+} from "react-icons/ai";
+import PageTitle from "../../components/PageTitle";
+
 const Bureau = () => {
   const queryClient = useQueryClient();
 
@@ -49,27 +59,33 @@ const Bureau = () => {
     deleteMutation.mutate(burId);
   };
 
-  const [filterText, setFilterText] = useState(""); // State variable for filtering
-
-  // Filtering logic based on filterText
-  const filteredData = data?.filter((bur) => bur.intitule.includes(filterText));
+  const [filterText, setFilterText] = useState("");
+  const filteredData = data?.filter((bur) =>
+    bur.intitule.toString().toLowerCase().includes(filterText.toLowerCase())
+  );
 
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
-      <NavLink
-        to={"/AjouterBur"}
-        className="bg-blue-500 self-start  hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
-      >
-        Ajouter Un Bureau
-      </NavLink>
-
-      <input
-        type="text"
-        placeholder="Filtrer Par Nom Département"
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        className="w-full px-4 py-2 mb-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <PageTitle title="Liste Des Bureaux" icon={AiOutlineUnorderedList} />
+      <div className="flex items-center justify-between  gap-3 p-2 ">
+        <ButtonLink
+          text={"Ajouter Un Bureau"}
+          icon={<AiOutlinePlus className="text-xl" />}
+          nav={"/AjouterBur"}
+        />
+        <div>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder={`Filtrer Par Intitule`}
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="w-auto  pl-8 pr-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
+          </div>
+        </div>
+      </div>
 
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -118,13 +134,13 @@ const Bureau = () => {
                       to={`/UpdateBur/${bur.idBureau}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
-                      Edit
+                      <BsPencilSquare className="text-2xl" />
                     </NavLink>
                     <button
                       onClick={() => handleDelete(bur.idBureau)}
                       className="font-medium text-red-600 dark:text-red-500 hover:underline"
                     >
-                      Delete
+                      <RxCross2 className="text-2xl" />
                     </button>
                   </td>
                 </tr>

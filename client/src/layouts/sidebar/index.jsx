@@ -98,16 +98,6 @@ const Sidebar = () => {
       icon: BsFillBuildingsFill,
       menus: ["Liste", "Sous Département"],
     },
-    {
-      name: "Bureaux",
-      icon: AiOutlineDesktop,
-      menus: ["Liste Des Bureaux"],
-    },
-    {
-      name: "Désignations",
-      icon: MdOutlineTaskAlt,
-      menus: ["Liste Des Désignations"],
-    },
   ];
 
   return (
@@ -125,7 +115,7 @@ const Sidebar = () => {
         animate={open ? "open" : "closed"}
         className=" bg-white text-gray shadow-xl z-[999] max-w-[16rem]  w-[16rem] 
             overflow-hidden md:relative fixed
-         h-screen "
+         h-full "
       >
         <div className="flex items-center gap-2.5 font-medium border-b py-3 border-slate-300  mx-3">
           <h1 className="uppercase flex items-center justify-center font-bold">
@@ -134,7 +124,7 @@ const Sidebar = () => {
           </h1>
         </div>
 
-        <div className="flex flex-col  h-full">
+        <div className="flex flex-col  min-h-full">
           <ul className="whitespace-pre px-2.5 text-[0.9rem] py-5 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[85%] h-[85%]">
             <li>
               <NavLink to={"/"} className="link">
@@ -153,6 +143,16 @@ const Sidebar = () => {
                     <SubMenu data={menu} />
                   </div>
                 ))}
+                <li>
+                  <NavLink to={"/Bureaux"} className="link">
+                    <AiOutlineDesktop size={23} className="min-w-max" />
+                    Bureau
+                  </NavLink>
+                  <NavLink to={"/Désignation"} className="link">
+                    <MdOutlineTaskAlt size={23} className="min-w-max" />
+                    Désignations
+                  </NavLink>
+                </li>
               </div>
             )}
             <li>

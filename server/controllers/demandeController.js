@@ -57,7 +57,7 @@ export const addDemande = (req, res) => {
     if (err) {
       return res.status(500).json(err);
     }
-    return res.status(200).json("Jour Ferie ajoutée");
+    return res.status(200).json("Demande ajoutée");
   });
 };
 

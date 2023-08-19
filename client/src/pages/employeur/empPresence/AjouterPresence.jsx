@@ -45,7 +45,6 @@ const AjouterPresence = () => {
         // This block will run if the API call is successful
 
         toast.info("Presence Ajouter!");
-        navigate("/Employeurs/Présence");
       })
       .catch((error) => {
         // This block will run if the API call encounters an error

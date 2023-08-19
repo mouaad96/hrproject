@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
-import AllApps from "./pages/AllApps";
 import Departement from "./pages/departement/Departement";
 import Employeur from "./pages/Employeur";
 import Bureau from "./pages/bureau/Bureau";
@@ -42,8 +41,17 @@ import Famille from "./pages/famille/Famille";
 import AjouterFamille from "./pages/famille/AjouterFamille";
 import UpdateFamille from "./pages/famille/UpdateFamille";
 import SingleEmp from "./pages/employeur/SingleEmp";
+import Salaire from "./pages/employeur/empSalaire/Salaire";
+import AjouterSalaire from "./pages/employeur/empSalaire/AjouterSalaire";
+import EmpSal from "./pages/employeur/empSalaire/EmpSal";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+import CurrentEmpSal from "./pages/employeur/empSalaire/CurrentEmpSal";
+import Home from "./pages/Home";
 
 const App = () => {
+  const { currentUser } = useContext(AuthContext);
+
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
@@ -53,7 +61,7 @@ const App = () => {
           path="/"
           element={
             <RootLayout>
-              <AllApps />
+              <Home />
             </RootLayout>
           }
         />
@@ -94,7 +102,7 @@ const App = () => {
         />
 
         <Route
-          path="/Bureaux/Liste Des Bureaux"
+          path="/Bureaux"
           element={
             <RootLayout>
               <Bureau />
@@ -112,7 +120,7 @@ const App = () => {
         />
 
         <Route
-          path="/Désignations/Liste Des Désignations"
+          path="/Désignation"
           element={
             <RootLayout>
               <Designation />
@@ -173,13 +181,32 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/Employeurs/Paiements"
+          element={
+            <RootLayout>
+              {currentUser ? (
+                currentUser.isAdmin ? (
+                  <Salaire />
+                ) : (
+                  <CurrentEmpSal />
+                )
+              ) : (
+                <p>Please log in to view content.</p>
+              )}
+            </RootLayout>
+          }
+        />
+
         <Route path="/Compte" element={<Compte />} />
         <Route path="/AjouterFer" element={<AjouterFerie />} />
+        <Route path="/AjouterSalaire" element={<AjouterSalaire />} />
         <Route path="/UpdateFer/:ferId" element={<UpdateFerie />} />
         <Route path="/Demande/:demId" element={<SingleDemande />} />
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
         <Route path="/SingleEmp/:eId" element={<SingleEmp />} />
+        <Route path="/singleSal/:salId" element={<EmpSal />} />
         <Route path="/AjouterFam" element={<AjouterFamille />} />
         <Route path="/AjouterDem" element={<AjouterDemande />} />
         <Route path="/AjouterDep" element={<AjouterDep />} />

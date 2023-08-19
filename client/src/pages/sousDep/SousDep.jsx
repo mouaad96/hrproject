@@ -4,6 +4,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useState } from "react";
 
+import { BsPencilSquare } from "react-icons/bs";
+import { RxCross2 } from "react-icons/rx";
+import ButtonLink from "../../components/ButtonLink";
+import {
+  AiOutlinePlus,
+  AiOutlineSearch,
+  AiOutlineUnorderedList,
+} from "react-icons/ai";
+import PageTitle from "../../components/PageTitle";
+
 const SousDep = () => {
   const queryClient = useQueryClient();
   const deleteSubDep = async (depId) => {
@@ -33,36 +43,37 @@ const SousDep = () => {
     mutation.mutate(depId);
   };
 
-  const [filterText, setFilterText] = useState(""); // State variable for filtering
-  const [filterChoice, setFilterChoice] = useState("Nom Sous Département");
-
-  // Filtering logic based on filterText
-  const filteredData = data?.filter((dep) => {
-    if (filterChoice === "Nom Sous Département") {
-      return dep.nomSubDep.includes(filterText);
-    }
-    if (filterChoice === "Code Sous Département") {
-      return dep.idSd.toString().includes(filterText);
-    }
-  });
+  const [filterText, setFilterText] = useState("");
+  const filteredData = data?.filter((subDep) =>
+    subDep.nomSubDep.toString().toLowerCase().includes(filterText.toLowerCase())
+  );
 
   return (
     <div>
       <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
-        <NavLink
-          to={"/AjouterSubDep"}
-          className="bg-blue-500 self-start  hover:bg-blue-700 text-white font-bold py-1 px-4 rounded-full"
-        >
-          Ajouter Sous Département
-        </NavLink>
-
-        <input
-          type="text"
-          placeholder={`Filtrer Par ${filterChoice}`}
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-          className="w-full px-4 py-2 mb-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <PageTitle
+          title="Liste Des Sous-Départements"
+          icon={AiOutlineUnorderedList}
         />
+        <div className="flex items-center justify-between  gap-3 p-2 ">
+          <ButtonLink
+            text={"Ajouter Sous Département"}
+            icon={<AiOutlinePlus className="text-xl" />}
+            nav={"/AjouterSubDep"}
+          />
+          <div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={`Filtrer Par Sous-Dép`}
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="w-auto  pl-8 pr-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
+            </div>
+          </div>
+        </div>
 
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -105,13 +116,13 @@ const SousDep = () => {
                         to={`/UpdateSubDep/${subDep.idSd}`}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                       >
-                        Edit
+                        <BsPencilSquare className="text-2xl" />
                       </NavLink>
                       <button
                         onClick={() => handleDelete(subDep.idSd)}
                         className="font-medium text-red-600 dark:text-red-500 hover:underline"
                       >
-                        Delete
+                        <RxCross2 className="text-2xl" />
                       </button>
                     </td>
                   </tr>

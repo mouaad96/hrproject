@@ -12,6 +12,7 @@ import congeRoute from "./routes/congeRoute.js";
 import feriesRoute from "./routes/feriesRoute.js";
 import familleRoute from "./routes/familleRoute.js";
 import demandeRoute from "./routes/demandeRoute.js";
+import salaireRoute from "./routes/salaireRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -52,6 +53,7 @@ app.use("/api/conge", congeRoute);
 app.use("/api/fer", feriesRoute);
 app.use("/api/dem", demandeRoute);
 app.use("/api/fam", familleRoute);
+app.use("/api/sal", salaireRoute);
 
 app.listen(5000, () => {
   console.log("API working");

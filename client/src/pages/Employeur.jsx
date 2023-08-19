@@ -57,7 +57,7 @@ const Employeur = () => {
 
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
-      <PageTitle title="List Des Employeurs" icon={AiOutlineOrderedList} />
+      <PageTitle title="Liste Des Employeurs" icon={AiOutlineOrderedList} />
       <div className="flex items-center justify-between  gap-3 p-2 ">
         <ButtonLink
           text={"Ajouter Employeur"}
