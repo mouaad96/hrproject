@@ -61,6 +61,26 @@ export const addDemande = (req, res) => {
   });
 };
 
+export const updateDemande = (req, res) => {
+  const { statutDem } = req.body;
+  const idDem = req.params.id;
+
+  const updateQuery = `
+      UPDATE demandes
+      SET statutDem = ? 
+      WHERE idDem = ?
+    `;
+  const values = [statutDem, idDem];
+
+  db.query(updateQuery, values, (err, result) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    return res.status(200).json("état demande est mis à jour");
+  });
+};
+
 export const deleteDemande = (req, res) => {
   const idDem = req.params.id;
   const deleteQuery = `

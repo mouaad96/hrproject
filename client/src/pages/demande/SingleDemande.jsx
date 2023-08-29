@@ -1,16 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlinePrinter } from "react-icons/ai";
 import { useReactToPrint } from "react-to-print";
 import { MdUpdate } from "react-icons/md";
 import PageTitle from "../../components/PageTitle";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import moment from "moment";
+import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const SingleDemande = () => {
   const { demId } = useParams();
-
+  const { currentUser } = useContext(AuthContext);
   const [values, setValues] = useState({
     demande: "",
     motif: "",
@@ -18,6 +20,24 @@ const SingleDemande = () => {
     statutDem: "",
     immatricule: "",
   });
+
+  const [inputs, setInputs] = useState({
+    statutDem: "",
+  });
+
+  const updateEtatDem = async (dem) => {
+    try {
+      await makeRequest.put(`/dem/update/${demId}`, dem);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const updateDemMutation = useMutation(updateEtatDem);
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const getDemande = useQuery(["singleDem", demId], async () => {
     const response = await makeRequest.get(`/dem/demande/${demId}`);
@@ -35,13 +55,30 @@ const SingleDemande = () => {
     return response.data;
   });
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //console.log(inputs);
+    updateDemMutation
+      .mutateAsync(inputs)
+      .then(() => {
+        toast.info("demande Mis A Jour!");
+      })
+      .catch((error) => {
+        toast.error(error.response.data);
+      });
+  };
+
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
   return (
-    <div className="bg-gray-800 py-6  h-max px-5">
+    <div
+      className={`bg-gray-800 py-6 px-5 ${
+        currentUser.isAdmin ? "h-fit" : "h-screen"
+      }`}
+    >
       <div className="flex items-center justify-between">
         <NavLink
           to={"/Demandes"}
@@ -89,30 +126,38 @@ const SingleDemande = () => {
           <span>{values.statutDem}</span>
         </div>
       </div>
-      <div className="flex flex-col gap-3 p-3">
-        <div className="flex items-center gap-2">
-          <label
-            className="text-sm font-semibold text-white "
-            htmlFor="demande"
-          >
-            Mettre A Jour Le Statut :
-          </label>
-          <select
-            id="demande"
-            name="statut"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm font-bold rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2"
-          >
-            <option value="">--Sélectionnez Le Statut--</option>
-            <option value="Accepté">Accepté</option>
-            <option value="Refusé">Refusé</option>
-          </select>
-        </div>
+      {currentUser.isAdmin ? (
+        <div className="flex flex-col gap-3 p-3">
+          <div className="flex items-center gap-2">
+            <label
+              className="text-sm font-semibold text-white "
+              htmlFor="demande"
+            >
+              Mettre A Jour Le Statut :
+            </label>
+            <select
+              id="demande"
+              name="statutDem"
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm font-bold rounded-lg focus:ring-blue-500 focus:border-blue-500  p-2"
+            >
+              <option value="">--Sélectionnez Le Statut--</option>
+              <option value="Accepté">Accepté</option>
+              <option value="Refusé">Refusé</option>
+            </select>
+          </div>
 
-        <button className="bg-blue-500 rounded-lg text-white self-start hover:bg-blue-600 p-2 font-semibold flex gap-1 items-center justify-center">
-          <span>Mettre A Jour</span>
-          <MdUpdate className="text-xl" />
-        </button>
-      </div>
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-500 rounded-lg text-white self-start hover:bg-blue-600 p-2 font-semibold flex gap-1 items-center justify-center"
+          >
+            <span>Mettre A Jour</span>
+            <MdUpdate className="text-xl" />
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

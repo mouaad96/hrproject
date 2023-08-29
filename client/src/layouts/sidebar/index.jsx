@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRef } from "react";
+import { useRef, useContext } from "react";
 import SubMenu from "./SubMenu";
 import { motion } from "framer-motion";
 import {
@@ -9,7 +9,8 @@ import {
   AiOutlineDesktop,
 } from "react-icons/ai";
 import { BsFillBuildingsFill, BsFillCalendarCheckFill } from "react-icons/bs";
-
+import { FaMoneyCheckAlt } from "react-icons/fa";
+import { AuthContext } from "../../context/AuthContext";
 import { useMediaQuery } from "react-responsive";
 import { MdMenu, MdPeople, MdLogout, MdOutlineTaskAlt } from "react-icons/md";
 
@@ -19,6 +20,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Sidebar = () => {
+  const { currentUser } = useContext(AuthContext);
+
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
   const [open, setOpen] = useState(isTabletMid ? false : true);
   const sidebarRef = useRef();
@@ -78,27 +81,27 @@ const Sidebar = () => {
       };
 
   const subMenusList = [
-    {
-      name: "Employeurs",
-      icon: MdPeople,
-      menus: [
-        "Liste Des Employeurs",
-        "Famille",
-        "Désignation",
-        "Bureau Occupé",
-        "Grade",
-        "Présence",
-        "Congés",
-        "Paiements",
-        "Promotions",
-      ],
-    },
+    currentUser.isAdmin
+      ? {
+          name: "Employeurs",
+          icon: MdPeople,
+          menus: [
+            "Liste Des Employeurs",
+            "Famille",
+            "Désignation",
+            "Bureau Occupé",
+            "Grade",
+            "Congés",
+            "Paiements",
+          ],
+        }
+      : null,
     {
       name: "Départements",
       icon: BsFillBuildingsFill,
       menus: ["Liste", "Sous Département"],
     },
-  ];
+  ].filter((item) => item !== null);
 
   return (
     <div>
@@ -168,6 +171,16 @@ const Sidebar = () => {
               </NavLink>
             </li>
 
+            {currentUser.isAdmin ? (
+              ""
+            ) : (
+              <li>
+                <NavLink to={"/Employeurs/Paiements"} className="link">
+                  <FaMoneyCheckAlt size={23} className="min-w-max" />
+                  Paiement
+                </NavLink>
+              </li>
+            )}
             <li className="border-t pt-5 border-slate-300 ">
               <NavLink to={"/Compte"} className="link">
                 <AiOutlineUser size={23} className="min-w-max" />

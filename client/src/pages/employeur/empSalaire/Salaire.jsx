@@ -177,7 +177,7 @@ const Salaire = () => {
                       {!(currentUser.immatricule === sal.immatricule) && (
                         <>
                           <NavLink
-                            to={`/UpdatePresence/${sal.idPaiment}`}
+                            to={`/UpdateSalaire/${sal.idPaiment}`}
                             className="font-medium text-blue-600 hover:text-blue-500"
                           >
                             <BsPencilSquare className="text-2xl" />
@@ -192,7 +192,7 @@ const Salaire = () => {
                       )}
 
                       <NavLink
-                        to={`/singleSal/${sal.idPaiment}`}
+                        to={`/singleSal/${sal.immatricule}`}
                         className="font-medium text-green-600 hover:text-green-500"
                       >
                         <AiFillEye className="text-2xl" />

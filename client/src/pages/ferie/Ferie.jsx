@@ -2,7 +2,7 @@ import { makeRequest } from "../../axios";
 import { Navigate, NavLink } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import moment from "moment";
 
 import { BsPencilSquare, BsFillCalendarEventFill } from "react-icons/bs";
@@ -11,9 +11,12 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import ButtonLink from "../../components/ButtonLink";
 import PageTitle from "../../components/PageTitle";
+import { AuthContext } from "../../context/AuthContext";
 
 const Ferie = () => {
   const queryClient = useQueryClient();
+
+  const { currentUser } = useContext(AuthContext);
 
   const deleteFerie = async (ferId) => {
     //api call
@@ -55,14 +58,18 @@ const Ferie = () => {
   const filteredData = data?.filter((des) => des.titre.includes(filterText));
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
-      <PageTitle title="Liste Jours De Férie" icon={BsFillCalendarEventFill} />
+      <PageTitle title="Jours De Férie" icon={BsFillCalendarEventFill} />
 
       <div className="flex items-center justify-between  gap-3 p-2 ">
-        <ButtonLink
-          text={"Ajouter Férie"}
-          icon={<AiOutlinePlus className="text-xl" />}
-          nav={"/AjouterFer"}
-        />
+        {currentUser.isAdmin ? (
+          <ButtonLink
+            text={"Ajouter Férie"}
+            icon={<AiOutlinePlus className="text-xl" />}
+            nav={"/AjouterFer"}
+          />
+        ) : (
+          ""
+        )}
 
         <div className="relative">
           <input
@@ -90,10 +97,13 @@ const Ferie = () => {
             <th scope="col" className="px-6 py-3">
               date fin
             </th>
-
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
+            {currentUser.isAdmin ? (
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            ) : (
+              ""
+            )}
           </tr>
         </thead>
         <tbody>
@@ -117,20 +127,24 @@ const Ferie = () => {
                   <td className="px-6 py-4">
                     {moment(fer.dateFinFerie).format("MM-D-YYYY")}
                   </td>
-                  <td className="px-6 py-4 flex gap-2">
-                    <NavLink
-                      to={`/UpdateFer/${fer.idfer}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      <BsPencilSquare className="text-2xl" />
-                    </NavLink>
-                    <button
-                      onClick={() => handleDelete(fer.idfer)}
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                    >
-                      <RxCross2 className="text-2xl" />
-                    </button>
-                  </td>
+                  {currentUser.isAdmin ? (
+                    <td className="px-6 py-4 flex gap-2">
+                      <NavLink
+                        to={`/UpdateFer/${fer.idfer}`}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        <BsPencilSquare className="text-2xl" />
+                      </NavLink>
+                      <button
+                        onClick={() => handleDelete(fer.idfer)}
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                      >
+                        <RxCross2 className="text-2xl" />
+                      </button>
+                    </td>
+                  ) : (
+                    ""
+                  )}
                 </tr>
               );
             })

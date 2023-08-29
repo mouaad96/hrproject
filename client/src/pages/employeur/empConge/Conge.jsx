@@ -129,7 +129,7 @@ const Conge = () => {
 
                   <td className="px-6 py-4 flex gap-2">
                     <NavLink
-                      to={`/UpdateDes/${conge.idCong}`}
+                      to={`/EmpConge/${conge.idCong}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
                       <MdRemoveRedEye className="text-2xl" />

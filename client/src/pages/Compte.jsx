@@ -239,7 +239,7 @@ const Compte = () => {
               <label className="block mb-2 text-sm font-medium text-white">
                 Immatricule
               </label>
-              <p className="p-2 font-bold bg-blue-400 w-16 text-center rounded-lg">
+              <p className="p-2 font-bold bg-blue-400 w-fit text-center rounded-lg">
                 {inputs.immatricule}
               </p>
               <p className="mt-2 text-sm text-yellow-500">

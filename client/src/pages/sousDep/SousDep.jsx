@@ -2,7 +2,7 @@ import { makeRequest } from "../../axios";
 import { Navigate, NavLink } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { BsPencilSquare } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
@@ -13,9 +13,13 @@ import {
   AiOutlineUnorderedList,
 } from "react-icons/ai";
 import PageTitle from "../../components/PageTitle";
+import { AuthContext } from "../../context/AuthContext";
 
 const SousDep = () => {
   const queryClient = useQueryClient();
+
+  const { currentUser } = useContext(AuthContext);
+
   const deleteSubDep = async (depId) => {
     // Perform your deletion logic here, such as making an API call
     makeRequest.delete(`/subDep/delete/${depId}`);
@@ -56,11 +60,15 @@ const SousDep = () => {
           icon={AiOutlineUnorderedList}
         />
         <div className="flex items-center justify-between  gap-3 p-2 ">
-          <ButtonLink
-            text={"Ajouter Sous Département"}
-            icon={<AiOutlinePlus className="text-xl" />}
-            nav={"/AjouterSubDep"}
-          />
+          {currentUser.isAdmin ? (
+            <ButtonLink
+              text={"Ajouter Sous Département"}
+              icon={<AiOutlinePlus className="text-xl" />}
+              nav={"/AjouterSubDep"}
+            />
+          ) : (
+            ""
+          )}
           <div>
             <div className="relative">
               <input
@@ -89,9 +97,13 @@ const SousDep = () => {
                 Département Associé
               </th>
 
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
+              {currentUser.isAdmin ? (
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
+              ) : (
+                ""
+              )}
             </tr>
           </thead>
           <tbody>
@@ -111,20 +123,24 @@ const SousDep = () => {
                     <td className="px-6 py-4">{subDep.idSd}</td>
                     <td className="px-6 py-4">{subDep.nomSubDep}</td>
                     <td className="px-6 py-4">{subDep.nomDep}</td>
-                    <td className="px-6 py-4 flex gap-2">
-                      <NavLink
-                        to={`/UpdateSubDep/${subDep.idSd}`}
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        <BsPencilSquare className="text-2xl" />
-                      </NavLink>
-                      <button
-                        onClick={() => handleDelete(subDep.idSd)}
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                      >
-                        <RxCross2 className="text-2xl" />
-                      </button>
-                    </td>
+                    {currentUser.isAdmin ? (
+                      <td className="px-6 py-4 flex gap-2">
+                        <NavLink
+                          to={`/UpdateSubDep/${subDep.idSd}`}
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        >
+                          <BsPencilSquare className="text-2xl" />
+                        </NavLink>
+                        <button
+                          onClick={() => handleDelete(subDep.idSd)}
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                        >
+                          <RxCross2 className="text-2xl" />
+                        </button>
+                      </td>
+                    ) : (
+                      ""
+                    )}
                   </tr>
                 );
               })

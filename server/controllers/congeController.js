@@ -9,6 +9,26 @@ export const getConge = (req, res) => {
   });
 };
 
+export const getCongeById = (req, res) => {
+  const idC = req.params.id;
+  const q = `
+  SELECT *
+  FROM conge cg
+  JOIN employeur emp
+  ON cg.immatricule = emp.immatricule
+  WHERE idCong = ?
+`;
+  db.query(q, idC, (err, results) => {
+    if (err) {
+      res.status(500).send("Erreur selection employeur");
+    } else if (results.length === 0) {
+      res.status(404).send("Employeur n'exist pas");
+    } else {
+      res.send(results[0]);
+    }
+  });
+};
+
 export const addConge = (req, res) => {
   const { motif, dateDebCong, joursCong, immatricule } = req.body;
   const idCong = uuidv4();

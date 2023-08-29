@@ -71,7 +71,7 @@ const UpdateEmpBur = () => {
     <div className=" h-screen  bg-gray-900 flex flex-col align-middle p-5 gap-2">
       <h1 className="text-white">Mettre A jour Le Bureau D'employeur</h1>
       <NavLink
-        to={"/Employeurs/Bureau%20Occupé"}
+        to={"/Bureaux"}
         className=" self-start text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
       >
         Retourner

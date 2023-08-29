@@ -32,18 +32,19 @@ export const getEmployeurSalaire = (req, res) => {
   const immatricule = req.params.id;
   const selectQuery = `
         SELECT *
-        FROM paiment
-        WHERE immatricule = ?
+        FROM paiment p
+        JOIN employeur emp
+        ON p.immatricule = emp.immatricule
+        WHERE p.immatricule = ?
       `;
-  db.query(selectQuery, [immatricule], (err, data) => {
+  db.query(selectQuery, immatricule, (err, results) => {
     if (err) {
-      return res.status(500).json(err);
+      res.status(500).send("Erreur selection salaire");
+    } else if (results.length === 0) {
+      res.status(404).send("salaire n'exist pas");
+    } else {
+      res.send(results);
     }
-    if (data.length === 0) {
-      return res.status(200).send([]);
-    }
-
-    return res.send(data);
   });
 };
 
@@ -100,7 +101,7 @@ export const updateSalaire = (req, res) => {
   const { NumCompte, rappelNet, netMensuel, dateP, immatricule } = req.body;
 
   // Check if a record exists for the specified idPaiment
-  const checkQuery = `SELECT COUNT(*) AS count FROM demandes WHERE idPaiment = ?`;
+  const checkQuery = `SELECT COUNT(*) AS count FROM paiment WHERE idPaiment = ?`;
 
   db.query(checkQuery, [idPaiment], (checkErr, checkResult) => {
     if (checkErr) {
@@ -118,7 +119,7 @@ export const updateSalaire = (req, res) => {
     // Check if an existing record with the same month and employee exists
     const currentMonth = new Date(dateP).getMonth() + 1; // Month is 0-indexed in JavaScript
     const currentYear = new Date(dateP).getFullYear();
-    const monthCheckQuery = `SELECT COUNT(*) AS count FROM demandes WHERE immatricule = ? AND MONTH(dateP) = ? AND YEAR(dateP) = ? AND idPaiment != ?`;
+    const monthCheckQuery = `SELECT COUNT(*) AS count FROM paiment WHERE immatricule = ? AND MONTH(dateP) = ? AND YEAR(dateP) = ? AND idPaiment != ?`;
 
     db.query(
       monthCheckQuery,
@@ -139,7 +140,7 @@ export const updateSalaire = (req, res) => {
         }
 
         // Proceed with updating the record
-        const updateQuery = `UPDATE demandes 
+        const updateQuery = `UPDATE paiment 
                            SET NumCompte = ?, rappelNet = ?, netMensuel = ?, dateP = ?, immatricule = ?
                            WHERE idPaiment = ?`;
         const updateValues = [

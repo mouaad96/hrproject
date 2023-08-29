@@ -22,11 +22,8 @@ import Designation from "./pages/designation/Designation";
 import AjouterDes from "./pages/designation/AjouterDes";
 import UpdateDes from "./pages/designation/UpdateDes";
 import EmployeurGrade from "./pages/employeur/EmployeurGrade";
-import Presence from "./pages/employeur/empPresence/Presence";
-import AjouterPresence from "./pages/employeur/empPresence/AjouterPresence";
 import Conge from "./pages/employeur/empConge/Conge";
 import AjouterConge from "./pages/employeur/empConge/AjouterConge";
-import UpdatePresence from "./pages/employeur/empPresence/UpdatePresence";
 import UpdateEmpBur from "./pages/employeur/UpdateEmpBur";
 import UpdateEmpDes from "./pages/employeur/UpdateEmpDes";
 import UpdateEmpGrade from "./pages/employeur/UpdateEmpGrade";
@@ -48,6 +45,10 @@ import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import CurrentEmpSal from "./pages/employeur/empSalaire/CurrentEmpSal";
 import Home from "./pages/Home";
+import EmpDemandes from "./pages/demande/EmpDemandes";
+import UpdateSalaire from "./pages/employeur/empSalaire/UpdateSalaire";
+import EmpConge from "./pages/employeur/empConge/EmpConge";
+import EmpHome from "./pages/employeur/EmpHome";
 
 const App = () => {
   const { currentUser } = useContext(AuthContext);
@@ -61,7 +62,15 @@ const App = () => {
           path="/"
           element={
             <RootLayout>
-              <Home />
+              {currentUser ? (
+                currentUser.isAdmin ? (
+                  <Home />
+                ) : (
+                  <EmpHome />
+                )
+              ) : (
+                <p>Please log in to view content.</p>
+              )}
             </RootLayout>
           }
         />
@@ -138,14 +147,6 @@ const App = () => {
         />
 
         <Route
-          path="/Employeurs/Présence"
-          element={
-            <RootLayout>
-              <Presence />
-            </RootLayout>
-          }
-        />
-        <Route
           path="/Feries"
           element={
             <RootLayout>
@@ -159,15 +160,6 @@ const App = () => {
           element={
             <RootLayout>
               <Conge />
-            </RootLayout>
-          }
-        />
-
-        <Route
-          path="/Demandes"
-          element={
-            <RootLayout>
-              <Demande />
             </RootLayout>
           }
         />
@@ -198,6 +190,23 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/Demandes"
+          element={
+            <RootLayout>
+              {currentUser ? (
+                currentUser.isAdmin ? (
+                  <Demande />
+                ) : (
+                  <EmpDemandes />
+                )
+              ) : (
+                <p>Please log in to view content.</p>
+              )}
+            </RootLayout>
+          }
+        />
+
         <Route path="/Compte" element={<Compte />} />
         <Route path="/AjouterFer" element={<AjouterFerie />} />
         <Route path="/AjouterSalaire" element={<AjouterSalaire />} />
@@ -206,20 +215,22 @@ const App = () => {
         <Route path="/Login" element={<Auth />} />
         <Route path="/AjouterEmp" element={<AjouterEmp />} />
         <Route path="/SingleEmp/:eId" element={<SingleEmp />} />
-        <Route path="/singleSal/:salId" element={<EmpSal />} />
+        <Route path="/EmpConge/:congId" element={<EmpConge />} />
+        <Route path="/singleSal/:im" element={<EmpSal />} />
         <Route path="/AjouterFam" element={<AjouterFamille />} />
         <Route path="/AjouterDem" element={<AjouterDemande />} />
         <Route path="/AjouterDep" element={<AjouterDep />} />
         <Route path="/AjouterBur" element={<AjouterBur />} />
         <Route path="/AjouterDes" element={<AjouterDes />} />
-        <Route path="/AjouterPresence" element={<AjouterPresence />} />
         <Route path="/AjouterSubDep" element={<AjouterSousDep />} />
         <Route path="/AjouterConge" element={<AjouterConge />} />
+
         <Route path="/UpdateEmp/:empId" element={<UpdateEmp />} />
         <Route path="/UpdateDep/:depId" element={<UpdateDep />} />
         <Route path="/UpdateDes/:desId" element={<UpdateDes />} />
         <Route path="/UpdateBur/:idBur" element={<UpdateBur />} />
-        <Route path="/UpdatePresence/:presId" element={<UpdatePresence />} />
+        <Route path="UpdateSalaire/:salId" element={<UpdateSalaire />} />
+
         <Route path="/UpdateSubDep/:sdId" element={<UpdateSousDep />} />
         <Route path="/UpdateEmpBur/:ima" element={<UpdateEmpBur />} />
         <Route path="/UpdateEmpDes/:ima" element={<UpdateEmpDes />} />

@@ -1,37 +1,24 @@
 import { makeRequest } from "../../../axios";
 import { NavLink } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { useState, useRef, useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useRef, useContext } from "react";
 import moment from "moment";
 import { useReactToPrint } from "react-to-print";
-
-import { BsPencilSquare } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
-import {
-  AiOutlinePlus,
-  AiOutlineSearch,
-  AiFillBank,
-  AiFillEye,
-  AiOutlinePrinter,
-} from "react-icons/ai";
+import { AiFillBank, AiFillEye, AiOutlinePrinter } from "react-icons/ai";
 import PageTitle from "../../../components/PageTitle";
 import { AuthContext } from "../../../context/AuthContext";
 
 const CurrentEmpSal = () => {
   const { currentUser } = useContext(AuthContext);
 
-  const queryClient = useQueryClient();
-
   // api get call
   const { isLoading, error, data } = useQuery({
-    queryKey: ["salaireEmp"],
+    queryKey: ["curSalaireEmp"],
     queryFn: () =>
-      makeRequest.get(`/sal/empSal/${currentUser?.immatricule}`).then((res) => {
+      makeRequest.get(`/sal/empSal/${currentUser.immatricule}`).then((res) => {
         return res.data;
       }),
   });
-  queryClient.invalidateQueries({ queryKey: ["salaireEmp"] });
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -113,7 +100,7 @@ const CurrentEmpSal = () => {
                     </td>
                     <td className="px-6 py-4 flex align-middle  gap-2 print:hidden">
                       <NavLink
-                        to={`/singleSal/${sal.idPaiment}`}
+                        to={`/singleSal/${sal.immatricule}`}
                         className="font-medium text-green-600 hover:text-green-500"
                       >
                         <AiFillEye className="text-2xl" />

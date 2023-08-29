@@ -8,7 +8,7 @@ import { makeRequest } from "../../../axios";
 import moment from "moment";
 
 const EmpSal = () => {
-  const { salId } = useParams();
+  const { im } = useParams();
 
   const [values, setValues] = useState({
     NumCompte: "",
@@ -16,13 +16,24 @@ const EmpSal = () => {
     netMensuel: "",
     dateP: "",
     immatricule: "",
+    nom: "",
+    prenom: "",
+    sexe: "",
   });
 
-  const getSlaire = useQuery(["singleSal", salId], async () => {
-    const response = await makeRequest.get(`/sal/salaire/${salId}`);
+  useQuery(["singleSal", im], async () => {
+    const response = await makeRequest.get(`/sal/empSal/${im}`);
 
-    const { NumCompte, rappelNet, netMensuel, dateP, immatricule } =
-      response.data;
+    const {
+      NumCompte,
+      rappelNet,
+      netMensuel,
+      dateP,
+      immatricule,
+      nom,
+      prenom,
+      sexe,
+    } = response.data[0];
     const formattedDate = moment(dateP).format("MM-DD-YYYY");
     setValues((prevValues) => ({
       ...prevValues,
@@ -31,6 +42,9 @@ const EmpSal = () => {
       netMensuel,
       dateP: formattedDate,
       immatricule,
+      nom,
+      prenom,
+      sexe,
     }));
     return response.data;
   });
@@ -41,7 +55,7 @@ const EmpSal = () => {
   });
 
   return (
-    <div className="bg-gray-800 py-6  h-max px-5">
+    <div className="bg-gray-800 py-6  h-screen px-5">
       <div className="flex items-center justify-between">
         <NavLink
           to={"/Employeurs/Paiements"}
@@ -68,6 +82,12 @@ const EmpSal = () => {
           <span>ommune</span>
         </h1>
         <PageTitle title="Fiche De Salaire" />
+        <div className="mb-5">
+          <p className="font-bold uppercase">
+            {values.sexe === "Homme" ? "M." : "MMe"} {values.prenom}{" "}
+            {values.nom}
+          </p>
+        </div>
         <div className="mb-5">
           <p className="font-bold">Immatricule: </p>
           <span>{values.immatricule}</span>

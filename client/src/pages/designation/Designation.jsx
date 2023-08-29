@@ -2,7 +2,7 @@ import { makeRequest } from "../../axios";
 import { Navigate, NavLink } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { BsPencilSquare } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
@@ -13,10 +13,11 @@ import {
   AiOutlineUnorderedList,
 } from "react-icons/ai";
 import PageTitle from "../../components/PageTitle";
+import { AuthContext } from "../../context/AuthContext";
 
 const Designation = () => {
   const queryClient = useQueryClient();
-
+  const { currentUser } = useContext(AuthContext);
   const deleteDesignation = async (desId) => {
     //api call
     try {
@@ -60,11 +61,15 @@ const Designation = () => {
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
       <PageTitle title="Liste Des Désignations" icon={AiOutlineUnorderedList} />
       <div className="flex items-center justify-between  gap-3 p-2 ">
-        <ButtonLink
-          text={"Ajouter Désignation"}
-          icon={<AiOutlinePlus className="text-xl" />}
-          nav={"/AjouterDes"}
-        />
+        {currentUser.isAdmin ? (
+          <ButtonLink
+            text={"Ajouter Désignation"}
+            icon={<AiOutlinePlus className="text-xl" />}
+            nav={"/AjouterDes"}
+          />
+        ) : (
+          ""
+        )}
         <div>
           <div className="relative">
             <input
@@ -90,9 +95,13 @@ const Designation = () => {
               Nom Désignation
             </th>
 
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
+            {currentUser.isAdmin ? (
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            ) : (
+              ""
+            )}
           </tr>
         </thead>
         <tbody>
@@ -111,20 +120,24 @@ const Designation = () => {
                 >
                   <td className="px-6 py-4">{des.idDes}</td>
                   <td className="px-6 py-4">{des.nomDes}</td>
-                  <td className="px-6 py-4 flex gap-2">
-                    <NavLink
-                      to={`/UpdateDes/${des.idDes}`}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      <BsPencilSquare className="text-2xl" />
-                    </NavLink>
-                    <button
-                      onClick={() => handleDelete(des.idDes)}
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                    >
-                      <RxCross2 className="text-2xl" />
-                    </button>
-                  </td>
+                  {currentUser.isAdmin ? (
+                    <td className="px-6 py-4 flex gap-2">
+                      <NavLink
+                        to={`/UpdateDes/${des.idDes}`}
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        <BsPencilSquare className="text-2xl" />
+                      </NavLink>
+                      <button
+                        onClick={() => handleDelete(des.idDes)}
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                      >
+                        <RxCross2 className="text-2xl" />
+                      </button>
+                    </td>
+                  ) : (
+                    ""
+                  )}
                 </tr>
               );
             })

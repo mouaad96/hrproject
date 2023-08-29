@@ -16,6 +16,7 @@ import PageTitle from "../../components/PageTitle";
 const Demande = () => {
   const queryClient = useQueryClient();
   const { currentUser } = useContext(AuthContext);
+
   const deleteDemande = async (demId) => {
     try {
       await makeRequest.delete(`/dem/delete/${demId}`);
@@ -24,27 +25,8 @@ const Demande = () => {
     }
   };
 
-  // api get call
-  const {
-    isLoading: isLoadingEmpDem,
-    error: errorEmpDem,
-    data: empDem,
-  } = useQuery({
-    queryKey: ["empDem"],
-    queryFn: async () => {
-      const empDemResponse = await makeRequest.get(
-        `/dem/empDem/${currentUser?.immatricule}`
-      );
-      return empDemResponse.data;
-    },
-  });
-
   // Query for demande data
-  const {
-    isLoading: isLoadingDemande,
-    error: errorDemande,
-    data: demande,
-  } = useQuery({
+  const { isLoading, error, data } = useQuery({
     queryKey: ["demande"],
     queryFn: async () => {
       const demandeResponse = await makeRequest.get(`/dem/list`);
@@ -66,16 +48,14 @@ const Demande = () => {
     demandeMutation.mutate(demId);
   };
 
-  const employeurIsAdmin = currentUser.isAdmin ? true : false;
-
   const [filterText, setFilterText] = useState("");
   const [filterType, setFilterType] = useState("immatricule");
 
   // Filtering logic based on filterText
-  const filteredData = demande?.filter((dem) =>
+  const filteredData = data?.filter((dem) =>
     dem[filterType].toString().toLowerCase().includes(filterText.toLowerCase())
   );
-  const dataArray = employeurIsAdmin ? filteredData : empDem;
+
   const handleFilterTypeChange = (e) => {
     setFilterType(e.target.value);
   };
@@ -84,50 +64,34 @@ const Demande = () => {
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
       <PageTitle title="List Des Demandes" icon={BsCardChecklist} />
 
-      <div
-        className={`flex items-center ${
-          currentUser.isAdmin ? "justify-end" : "justify-between"
-        } gap-3 p-2 `}
-      >
-        {!currentUser.isAdmin && (
-          <ButtonLink
-            text={"Ajouter Demande"}
-            icon={<AiOutlinePlus className="text-xl" />}
-            nav={"/AjouterDem"}
-          />
-        )}
+      <div className="flex items-center justify-end  gap-3 p-2">
+        <div className="flex gap-3">
+          <div className="flex items-center gap-2">
+            <label className="text-sm" htmlFor="filter">
+              Type De Filtre
+            </label>
+            <select
+              id="filter"
+              className="w-auto  py-2 px-2  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={filterType}
+              onChange={handleFilterTypeChange}
+            >
+              <option value="immatricule">Immatricule</option>
 
-        {currentUser?.isAdmin ? (
-          <div className="flex gap-3">
-            <div className="flex items-center gap-2">
-              <label className="text-sm" htmlFor="filter">
-                Type De Filtre
-              </label>
-              <select
-                id="filter"
-                className="w-auto  py-2 px-2  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={filterType}
-                onChange={handleFilterTypeChange}
-              >
-                <option value="immatricule">Immatricule</option>
-
-                <option value="demande">Demande</option>
-              </select>
-            </div>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder={`Filtrer Par ${filterType}`}
-                value={filterText}
-                onChange={(e) => setFilterText(e.target.value)}
-                className="w-auto  pl-8 pr-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
-            </div>
+              <option value="demande">Demande</option>
+            </select>
           </div>
-        ) : (
-          ""
-        )}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder={`Filtrer Par ${filterType}`}
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="w-auto  pl-8 pr-4 py-2 border  rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <AiOutlineSearch className="absolute top-3 left-3 text-gray-700" />
+          </div>
+        </div>
       </div>
       <div className="max-h-96 overflow-y-auto scrollbar">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
@@ -155,14 +119,14 @@ const Demande = () => {
             </tr>
           </thead>
           <tbody>
-            {dataArray?.length === 0 ? (
+            {filteredData?.length === 0 ? (
               <tr className="text-center ">
                 <td className="p-6" colSpan={5}>
                   Pas De Demande
                 </td>
               </tr>
             ) : (
-              dataArray?.map((dem) => {
+              filteredData?.map((dem) => {
                 return (
                   <tr
                     key={dem.idDem}
@@ -186,11 +150,7 @@ const Demande = () => {
                         onClick={() => handleDelete(dem.idDem)}
                         className="font-medium text-red-600 hover:text-red-500"
                       >
-                        {dem.statutDem === "En Attente" ? (
-                          <RxCross2 className="text-2xl" />
-                        ) : (
-                          ""
-                        )}
+                        <RxCross2 className="text-2xl" />
                       </button>
                     </td>
                   </tr>
