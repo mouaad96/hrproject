@@ -3,7 +3,7 @@ import { Navigate, NavLink } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ButtonLink from "../components/ButtonLink";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { BsPencilSquare } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
@@ -13,8 +13,10 @@ import {
   AiOutlineSearch,
   AiOutlineOrderedList,
   AiFillEye,
+  AiOutlinePrinter,
 } from "react-icons/ai";
 import PageTitle from "../components/PageTitle";
+import { useReactToPrint } from "react-to-print";
 
 const Employeur = () => {
   const queryClient = useQueryClient();
@@ -37,7 +39,7 @@ const Employeur = () => {
   queryClient.invalidateQueries({ queryKey: ["emp"] });
   const mutation = useMutation(deleteItem, {
     onSuccess: () => {
-      toast.info("Employeur supprimé!");
+      toast.warning("Employeur supprimé!");
     },
   });
   const handleDelete = (itemId) => {
@@ -55,15 +57,29 @@ const Employeur = () => {
     setFilterType(e.target.value);
   };
 
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   return (
     <div className="relative overflow-x-auto flex gap-1 flex-col shadow-md sm:rounded-lg ">
       <PageTitle title="Liste Des Employeurs" icon={AiOutlineOrderedList} />
       <div className="flex items-center justify-between  gap-3 p-2 ">
-        <ButtonLink
-          text={"Ajouter Employeur"}
-          icon={<AiOutlinePlus className="text-xl" />}
-          nav={"/AjouterEmp"}
-        />
+        <div className="flex gap-1">
+          <ButtonLink
+            text={"Ajouter Employeur"}
+            icon={<AiOutlinePlus className="text-xl" />}
+            nav={"/AjouterEmp"}
+          />
+          <button
+            onClick={handlePrint}
+            className="bg-gray-500 rounded-full text-white hover:bg-gray-600 p-2 font-semibold flex gap-1 items-center justify-center"
+          >
+            <AiOutlinePrinter className="text-xl" />
+            <span> Imprimer</span>
+          </button>
+        </div>
         <div className="flex gap-3">
           <div className="flex items-center gap-2">
             <label className="text-sm" htmlFor="filter">
@@ -92,65 +108,73 @@ const Employeur = () => {
           </div>
         </div>
       </div>
+      <div
+        className="max-h-96 overflow-y-auto scrollbar print:px-4  "
+        ref={componentRef}
+      >
+        <div className="hidden print:block">
+          <PageTitle title="List Des Employeurs" />
+        </div>
 
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-        <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              immatricule
-            </th>
+        <table className="print:border-2 border-gray-700 w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+          <thead className="text-xs text-center text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                immatricule
+              </th>
 
-            <th scope="col" className="px-6 py-3">
-              prenom
-            </th>
-            <th scope="col" className="px-6 py-3">
-              nom
-            </th>
-            <th scope="col" className="px-6 py-3">
-              tel
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody className="text-center">
-          {filteredData?.map((employee) => {
-            return (
-              <tr
-                key={employee.immatricule}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-              >
-                <td className="px-6 py-4">{employee.immatricule}</td>
+              <th scope="col" className="px-6 py-3">
+                prenom
+              </th>
+              <th scope="col" className="px-6 py-3">
+                nom
+              </th>
+              <th scope="col" className="px-6 py-3">
+                tel
+              </th>
+              <th scope="col" className="px-6 py-3 print:hidden">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody className="text-center">
+            {filteredData?.map((employee) => {
+              return (
+                <tr
+                  key={employee.immatricule}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                >
+                  <td className="px-6 py-4">{employee.immatricule}</td>
 
-                <td className="px-6 py-4">{employee.prenom}</td>
-                <td className="px-6 py-4">{employee.nom}</td>
-                <td className="px-6 py-4">{employee.tel}</td>
-                <td className="px-6 py-4 flex justify-center gap-2">
-                  <NavLink
-                    to={`/UpdateEmp/${employee.immatricule}`}
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >
-                    <BsPencilSquare className="text-2xl" />
-                  </NavLink>
-                  <button
-                    onClick={() => handleDelete(employee.immatricule)}
-                    className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                  >
-                    <RxCross2 className="text-2xl" />
-                  </button>
-                  <NavLink
-                    to={`/SingleEmp/${employee.immatricule}`}
-                    className="font-medium text-green-600 hover:text-green-500"
-                  >
-                    <AiFillEye className="text-2xl" />
-                  </NavLink>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  <td className="px-6 py-4">{employee.prenom}</td>
+                  <td className="px-6 py-4">{employee.nom}</td>
+                  <td className="px-6 py-4">{employee.tel}</td>
+                  <td className="px-6 py-4 flex justify-center gap-2  print:hidden">
+                    <NavLink
+                      to={`/UpdateEmp/${employee.immatricule}`}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      <BsPencilSquare className="text-2xl" />
+                    </NavLink>
+                    <button
+                      onClick={() => handleDelete(employee.immatricule)}
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                    >
+                      <RxCross2 className="text-2xl" />
+                    </button>
+                    <NavLink
+                      to={`/SingleEmp/${employee.immatricule}`}
+                      className="font-medium text-green-600 hover:text-green-500"
+                    >
+                      <AiFillEye className="text-2xl" />
+                    </NavLink>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

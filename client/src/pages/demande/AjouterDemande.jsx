@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
 import moment from "moment";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 
 const AjouterDemande = () => {
   const { currentUser } = useContext(AuthContext);
@@ -48,11 +49,12 @@ const AjouterDemande = () => {
 
   return (
     <div className=" h-fit  bg-gray-900 flex flex-col align-middle p-5 gap-2">
-      <h1 className="text-white">Ajouter Une Désignation</h1>
+      <h1 className="text-white text-center">Ajouter Une Demande</h1>
       <NavLink
         to={"/Demandes"}
-        className=" self-start text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        className=" self-start flex items-center gap-1 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm   w-auto px-5 py-2.5 text-center"
       >
+        <AiOutlineArrowLeft />
         Retourner
       </NavLink>
       <form className="flex flex-col justify-center align-middle py-10">

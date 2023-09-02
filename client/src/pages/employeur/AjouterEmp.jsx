@@ -91,14 +91,14 @@ const AjouterEmp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(inputs);
+    //console.log(inputs);
 
     addMutation
       .mutateAsync(inputs) // Use mutateAsync to await the Promise returned by addEmployee
       .then(() => {
         // This block will run if the API call is successful
 
-        toast.info("Employeur Ajouter!");
+        toast.success("Employeur Ajouter!");
       })
       .catch((error) => {
         // This block will run if the API call encounters an error
@@ -344,7 +344,7 @@ const AjouterEmp = () => {
                 <DropDown
                   handleChange={handleChange}
                   name="echelle"
-                  id="echelle"
+                  id="échelle"
                   keyProp="echelle"
                   data={echelles}
                   value="echelle"
@@ -355,7 +355,7 @@ const AjouterEmp = () => {
                 <DropDown
                   handleChange={handleChange}
                   name="echelant"
-                  id="echelant"
+                  id="échelon"
                   keyProp="echelant"
                   data={echelants}
                   value="echelant"
